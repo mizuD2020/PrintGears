@@ -1,0 +1,89 @@
+
+/* CSS styling for the header */
+header {
+    background-color: #000000;
+ 
+
+}
+.logo1 img {
+    width: 335px;
+    height: 84px;
+}
+.logo1,
+.search-bar{
+    display: inline;
+    vertical-align: middle;
+    
+}
+
+.navigation {
+    float: right;
+     
+}
+.navigation li {
+    display: inline-block;
+    margin-left: 5px; /* Adjust the margin between navigation items */
+}
+.navigation li a {
+    text-decoration: none;
+    font-style: normal;
+    font-family: Roboto;
+    letter-spacing: 1.2px;
+    font-size: 20px;
+    color: #fff;
+    padding: 10px;
+}
+.navigation li a img {
+
+    height: 35.2px;
+    width: 35.2px;
+    vertical-align: middle;
+    padding: 10px;
+}
+.navigation li button a {
+
+    height: 40.2px;
+    width: 35.2px;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+   
+
+}
+.search-container input[type="text"] {
+    padding: 5px 30px 5px 10px; /* Adjust the padding to accommodate the search icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 30px;
+ 
+    height: 30px;
+    width: 350px;
+}
+
+::placeholder{
+    color: #fff;
+    font-size: 15px;
+}
+
+
+.search-container button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btnlogin{
+    width: 100px;
+    height: 40px;
+
+
+}

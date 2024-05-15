@@ -1,0 +1,100 @@
+body {
+    background-color: black;
+    color: white; 
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+
+}
+.recently-added {
+    width: 321px;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    
+
+}
+
+.line {
+    content: "";
+    height: 2px;
+    width: calc(100vw - 360px);
+    background-color: #bd00ff;
+
+}
+.items-container {
+    margin-left: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+   
+    grid-gap: 20px; 
+    width: calc(100vw - 360px);
+    flex-direction: row;
+
+    
+    
+}
+.item {
+    height: 320px;
+    width: 200px;
+    background-color: #333; 
+    padding: 10px;
+}
+.item img {
+    width: 100%;
+    height: auto;
+}
+.item-buttons {
+    
+    display: flex;
+    justify-content: space-between;
+}
+.category {
+    width: 350px;
+    background-color: #333;
+    color: white;
+   
+    
+    position: fixed;
+    top: 103px;
+    right: 10px;
+    width: 280px;
+    height: 500px;
+
+    margin-top: 40px;
+    background-color: #2a2929;
+    
+
+}
+
+.buy-button {
+    width: 90px;
+    height: 30px;
+    flex-grow: 0;
+    border-radius: 5px;
+    background-color: #bd00ff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    
+}
+
+.add-to-cart-button {
+  
+    width: 90px;
+    height: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: #fcfcfc;
+    background-color: #0c0000; 
+    border: none; 
+    border-radius: 5px;
+    
+}

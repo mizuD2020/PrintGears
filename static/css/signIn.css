@@ -69,10 +69,12 @@
       }
 
       .right img {
-        width: 100%;
-        height: 100vh;
+        width: 828px;
+        height: 1024px;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
+        object-fit: contain;
+        margin: 0 0 0 80px;
       }
       .button-container{
         display: flex;
