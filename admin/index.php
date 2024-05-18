@@ -3,7 +3,7 @@
 
 <head>
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../static/css/adminstyles.css">
 </head>
 
 <body>
@@ -12,6 +12,8 @@
         <button class="nav-btn active" data-section="users">Users</button>
         <button class="nav-btn" data-section="items">Items</button>
         <button class="nav-btn" data-section="categories">Categories</button>
+        <button class="nav-btn" data-section="Orders">Orders</button>
+
     </nav>
 
     <div class="section active" id="users">
@@ -50,10 +52,32 @@
 
     <div class="section" id="categories">
         <h3>List of Categories</h3>
-        <!-- Category list with update, delete buttons, and quantity will be displayed here -->
+        <?php include 'get_categories.php'; ?>
+
+        <button id="addCategoryButton" class="add-category-button">Add category</button>
+        <!-- Add category Modal -->
+        <div id="addCategoryModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Add New category</h3>
+                <form action="add_category.php" method="POST" enctype="multipart/form-data">
+                    <label for="categoryName">Name:</label>
+                    <input type="text" id="categoryName" name="categoryName" required><br>
+                    <label for="categoryImage">Image:</label>
+                    <input type="file" id="categoryImage" name="categoryImage" required accept="image/*" single><br>
+                    <button type="submit">Add category</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
-    <script src="script.js"></script>
+    <div class="section" id="Orders">
+        <h3>List of Orders</h3>
+
+    </div>
+    <script src="../static/js/adminscript.js"></script>
+    <script src="../static/js/scriptcategory.js"></script>
 </body>
 
 </html>

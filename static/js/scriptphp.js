@@ -55,3 +55,20 @@ document.addEventListener("DOMContentLoaded", function() {
         itemsContainer.appendChild(itemDiv);
     }
 });
+
+
+//loginDropdown
+function toggleDropdown() {
+    var dropdown = document.getElementById('profileDropdown');
+    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+}
+
+document.addEventListener('click', function (event) {
+    var profileMenu = document.querySelector('.profile-menu');
+    if (profileMenu && !profileMenu.contains(event.target)) {
+        document.getElementById('profileDropdown').style.display = 'none';
+    }
+});
+
+
+

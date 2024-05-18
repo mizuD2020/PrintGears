@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="Sign up.css">
+  <link rel="stylesheet" href="../static/css/signUp.css">
   <title>MiZu_Stickers Sign up</title>
 </head>
 
@@ -34,36 +34,12 @@
       </form>
     </div>
     <div class="right">
-      <img src="images/Saitama ok.png" alt="Saitama Picture" />
+      <img src="../images/Saitama ok.png" alt="Saitama Picture" />
     </div>
   </div>
 
-  <script>
-    function checkPasswordMatch() {
-      var password = document.getElementById("password").value;
-      var confirmPassword = document.getElementById("confirmPassword").value;
-      var passwordMismatch = document.getElementById("passwordMismatch");
+  <script src="Scripts.js">
 
-      if (password !== confirmPassword) {
-        passwordMismatch.style.display = "block";
-      } else {
-        passwordMismatch.style.display = "none";
-      }
-    }
-
-
-
-    function validateForm() {
-      var password = document.getElementById("password").value;
-      var confirmPassword = document.getElementById("confirmPassword").value;
-
-      if (password !== confirmPassword) {
-        document.getElementById("passwordMismatch").style.display = "block";
-        return false;
-      }
-
-      return true;
-    }
   </script>
 </body>
 

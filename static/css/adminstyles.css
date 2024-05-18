@@ -68,8 +68,7 @@ tr:hover {
 }
 
 
-/* buttons */
-/* CSS for update and delete buttons */
+
 .button-container {
     display: flex;
     gap: 8px; /* Adjust the gap as needed */
@@ -99,7 +98,7 @@ tr:hover {
 
 
 
-/* add items button */
+
 
 
 #addItemButton {
@@ -120,7 +119,7 @@ tr:hover {
     background-color: #0056b3;
 }
 
-/* Modal Styles */
+
 .modal {
     display: none; 
     position: fixed; 

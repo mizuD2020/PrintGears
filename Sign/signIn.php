@@ -6,10 +6,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=\, initial-scale=1.0" />
-    <link rel="stylesheet" href="Sign In.css">
+    <link rel="stylesheet" href="../static/css/signIn.css">
     <title>MiZu_Stickers Sign In</title>
 
   <body>
+    <?php if (isset($_GET['error'])): ?>
+      <div class="error-popup" id="errorPopup"><?php echo htmlspecialchars($_GET['error']); ?></div>
+    <?php endif; ?>
     <div class="container">
       <div class="left">
 
@@ -35,10 +38,10 @@
         </div>
       </div>
       <div class="right">
-        <img src="images/Saitama.png" alt="" />
+        <img src="../images/Saitama.png" alt="" />
       </div>
     </div>
-
+    <script src="Scripts.js"></script>
   </body>
 
 </html>

@@ -1,9 +1,10 @@
 <?php
+
 session_start();
 
 include ("dbconnection.php");
 
-if (isset ($_POST["signIn"])) {
+if (isset($_POST["signIn"])) {
     $Username = $_POST['username'];
     $Password = $_POST['password'];
 
@@ -18,15 +19,18 @@ if (isset ($_POST["signIn"])) {
         if (password_verify($Password, $row['password'])) {
 
             $_SESSION['username'] = $Username;
-            header('location: index.php');
+            header('location: ../index.php');
             exit;
         } else {
-            $error = "Invalid password";
-            header("location:signIn.php");
+
+            header("location:signIn.php?error=Invalid%20password");
+
         }
     } else {
-        $error = "Invalid username";
-        header("location:signIn.php");
+
+        header("location:signIn.php?error=Invalid%20username");
+
     }
 }
+
 ?>
