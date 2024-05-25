@@ -1,8 +1,11 @@
 <?php
 include "Sign/dbconnection.php";
 $cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
-$cart_item = mysqli_query($connection, "SELECT * FROM cart_item WHERE cart_id = '{$cart['id']}'");
-$count = mysqli_num_rows($cart_item);
+$count = 0;
+if (isset($cart)) {
+    $cart_item = mysqli_query($connection, "SELECT * FROM cart_item WHERE cart_id = '{$cart['id']}'");
+    $count = mysqli_num_rows($cart_item);
+}
 ?>
 <html class="has-background-dark">
 

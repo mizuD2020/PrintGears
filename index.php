@@ -23,7 +23,7 @@ include 'header.php';
                                 <h5 class="card-title"><?php echo $sticker['name'] ?></h5>
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button class="btn btn-primary">Buy</button>
-                                    <a href="<?php echo 'add_to_cart.php?sticker_id='.$sticker['id'];?>" class="btn btn-primary">Add to cart</a>
+                                    <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>" class="btn btn-primary">Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -37,8 +37,11 @@ include 'header.php';
                     <h5 class="mb-0">Categories</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">One Piece</li>
-                    <li class="list-group-item">Solo Leveling</li>
+                    <?php
+                    while ($category = mysqli_fetch_assoc($result)) { ?>
+                        <li class="list-group-item"><?php echo $category['name'] ?></li>
+                    <?php }
+                    ?>
                 </ul>
             </div>
         </div>
