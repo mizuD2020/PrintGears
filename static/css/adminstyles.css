@@ -155,3 +155,6 @@ tr:hover {
     text-decoration: none;
     cursor: pointer;
 }
+.container {
+    margin-left: 200px;
+}

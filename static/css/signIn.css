@@ -41,8 +41,7 @@
         margin-bottom: 10px;
       }
 
-      input[type="text"],
-      input[type="password"] {
+      input{
         width: 90%;
         padding: 10px;
         border: none;

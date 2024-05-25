@@ -3,26 +3,25 @@
 include ("dbconnection.php");
 
 if (isset ($_POST["signUp"])) {
-    $Username = $_POST['username'];
-    $Password = $_POST['password'];
-    $ConfirmPassword = $_POST['confirmPassword'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $email = $_POST['email'];
+    $fullname = $_POST['fullname'];
+    $confirmPassword = $_POST['confirmPassword'];
 
-    // validation
-    if (empty ($Username) || empty ($Password) || empty ($ConfirmPassword)) {
+    if (empty ($username) || empty ($password) || empty ($confirmPassword) || empty($email) || empty($fullname)) {
         header('location:signup.php?message=All fields are required');
         exit;
     }
 
-    if ($Password !== $ConfirmPassword) {
+    if ($password !== $confirmPassword) {
         header('location:signup.php?message=Passwords do not match');
         exit;
     }
 
-    // Password has for better security
-    $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Data into database
-    $query = "INSERT INTO `user` (`username`, `password`) VALUES ('$Username', '$hashedPassword')";
+    $query = "INSERT INTO `user` (`username`, `password`, `email`, `fullname`) VALUES ('$username', '$hashedPassword', '$email', '$fullname')";
     $result = mysqli_query($connection, $query);
 
     if (!$result) {

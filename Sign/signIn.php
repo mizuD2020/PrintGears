@@ -10,7 +10,7 @@
     <title>MiZu_Stickers Sign In</title>
 
   <body>
-    <?php if (isset($_GET['error'])): ?>
+    <?php if (isset($_GET['error'])) : ?>
       <div class="error-popup" id="errorPopup"><?php echo htmlspecialchars($_GET['error']); ?></div>
     <?php endif; ?>
     <div class="container">
@@ -21,10 +21,9 @@
           <h1>Sign In</h1>
 
           <div>
-            <label for="username">Username:</label> <br />
-            <input type="text" id="username" name="username" required />
+            <label for="email">Email:</label> <br />
+            <input type="email" id="email" name="email" required />
           </div>
-
           <div>
             <label for="password">Password:</label> <br />
             <input type="password" id="password" name="password" required />

@@ -14,6 +14,15 @@
       <form action="InsertUser.php" method="POST" onsubmit="return validateForm()">
         <h1>Sign up</h1>
         <div>
+          <label for="fullname">Fullname:</label> <br />
+          <input type="text" id="fullname" name="fullname" required />
+        </div>
+        <div>
+          <label for="email">Email:</label> <br />
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div>
           <label for="username">Username:</label> <br />
           <input type="text" id="username" name="username" required />
         </div>
