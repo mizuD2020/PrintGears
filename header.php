@@ -1,10 +1,12 @@
 <?php
 include "Sign/dbconnection.php";
-$cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
-$count = 0;
-if (isset($cart)) {
-    $cart_item = mysqli_query($connection, "SELECT * FROM cart_item WHERE cart_id = '{$cart['id']}'");
-    $count = mysqli_num_rows($cart_item);
+if (isset($_SESSION['user'])) {
+    $cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
+    $count = 0;
+    if (isset($cart)) {
+        $cart_item = mysqli_query($connection, "SELECT * FROM cart_item WHERE cart_id = '{$cart['id']}'");
+        $count = mysqli_num_rows($cart_item);
+    }
 }
 ?>
 <html class="has-background-dark">
@@ -52,10 +54,12 @@ if (isset($cart)) {
                             <a href="cart.php" class="btn btn-primary"><i class="bi bi-cart"></i>&nbsp;View Cart
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     <?php echo $count; ?>
-                                    <span class="visually-hidden">unread messages</span>
+                                    <span class="visually-hidden">cart</span>
                                 </span>
-
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="logout.php" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i>&nbsp;Logout</a>
                         </li>
                     <?php } ?>
                 </ul>

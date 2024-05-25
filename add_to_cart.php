@@ -7,7 +7,7 @@ if ($existing_cart) {
     $sql = "INSERT INTO cart_item(cart_id, sticker_id, quantity) VALUES ('$existing_cart[id]', '$sticker_id', 1)";
     mysqli_query($connection, $sql);
 } else {
-    $sql = "INSERT INTO cart(user_id) VALUES ('{$_SESSION['user']['id']}')";
+    $sql = "INSERT INTO cart(user_id) VALUES ({$_SESSION['user']['id']})";
     mysqli_query($connection, $sql);
     $cart_id = mysqli_insert_id($connection);
     $sql = "INSERT INTO cart_item(cart_id, sticker_id, quantity) VALUES ('$cart_id', '$sticker_id', 1)";
