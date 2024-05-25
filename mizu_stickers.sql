@@ -1,5 +1,9 @@
-drop table if exists categories;
+drop table if exists order;
+drop table if exists order_item;
+drop table if exists cart;
+drop table if exists cart_item;
 drop table if exists sticker;
+drop table if exists categories;
 drop table if exists user;
 
 CREATE TABLE `categories` (
