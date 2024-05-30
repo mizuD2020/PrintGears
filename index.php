@@ -1,11 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 session_start();
-include("./Sign/dbconnection.php");
+include 'header.php';
 $result = mysqli_query($connection, "SELECT * FROM categories");
 $stickers = mysqli_query($connection, "SELECT * FROM sticker");
 ?>
+
+
+
 <?php
-include 'header.php';
+
+
 ?>
 <div class="container">
     <div class="row">
@@ -17,13 +24,15 @@ include 'header.php';
                     <div class="col">
                         <div class="card h-100">
                             <div class="ratio ratio-1x1">
-                                <img src="<?php echo $sticker['image'] ?>" class="card-img-top img-fluid" alt="Sticker Image">
+                                <img src="<?php echo $sticker['image'] ?>" class="card-img-top img-fluid"
+                                    alt="Sticker Image">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $sticker['name'] ?></h5>
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button class="btn btn-primary">Buy</button>
-                                    <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>" class="btn btn-primary">Add to cart</a>
+                                    <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
+                                        class="btn btn-primary">Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -47,3 +56,7 @@ include 'header.php';
         </div>
     </div>
 </div>
+
+
+
+</html>

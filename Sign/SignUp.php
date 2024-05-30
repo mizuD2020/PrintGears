@@ -14,7 +14,7 @@
       <form action="InsertUser.php" method="POST" onsubmit="return validateForm()">
         <h1>Sign up</h1>
         <div>
-          <label for="fullname">Fullname:</label> <br />
+          <label for="fullname">Name:</label> <br />
           <input type="text" id="fullname" name="fullname" required />
         </div>
         <div>
@@ -25,6 +25,8 @@
         <div>
           <label for="username">Username:</label> <br />
           <input type="text" id="username" name="username" required />
+          <div id="usernameTaken" style="color: red; display: none;">Username is already taken</div>
+
         </div>
 
         <div class="password-field">
@@ -34,7 +36,6 @@
         <div class="password-field">
           <label for="confirmPassword">Confirm Password:</label> <br />
           <input type="password" id="confirmPassword" name="confirmPassword" oninput="checkPasswordMatch()" required />
-
           <div id="passwordMismatch" style="color: red; display: none;">Passwords do not match</div>
         </div>
         <div class="button-container">

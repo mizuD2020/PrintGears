@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "header.php";
-include "Sign/dbconnection.php";
+
 $cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
 if (!isset($cart['id'])) {
     die('<p>Your cart is empty.</p>');
@@ -32,7 +32,7 @@ WHERE cart_item.cart_id = {$cart['id']}
                 $total = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
                     $total += $row['price'] * $row['quantity'];
-                ?>
+                    ?>
                     <tr>
                         <td><img src="<?php echo $row['image'] ?>" class="img-thumbnail" width="100"></td>
                         <td><?php echo $row['name'] ?></td>
@@ -47,9 +47,9 @@ WHERE cart_item.cart_id = {$cart['id']}
                 </tr>
             </tbody>
         </table>
-        
-            <button class="btn btn-primary" type="button">Checkout</button>
-        
+
+        <button href="checkout.php" class="btn btn-primary" type="button">Checkout</button>
+
     <?php } else { ?>
         <p>Your cart is empty.</p>
     <?php } ?>

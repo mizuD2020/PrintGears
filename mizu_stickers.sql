@@ -65,3 +65,15 @@ CREATE TABLE `cart_item`(
   FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`),
   FOREIGN KEY (`sticker_id`) REFERENCES `sticker`(`id`)
 );
+
+CREATE TABLE `customized_stickers` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `image_url` TEXT NOT NULL,
+  `quantity` INT(11) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+);
+

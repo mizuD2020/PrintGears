@@ -1,4 +1,3 @@
-
 <html class="has-background-dark">
 
 <head>
@@ -8,8 +7,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 
-<body >
-    
+<body>
+
 </body>
 
 </html>

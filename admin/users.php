@@ -1,8 +1,7 @@
 <?php
-require_once 'dbconnect.php';
-$query = "SELECT * FROM user";
-$result = mysqli_query($conn, $query);
-require "sidebar.php";
+require ("sidebar.php");
+require ("dbconnect.php");
+$result = mysqli_query($conn, "SELECT * FROM user");
 ?>
 
 <div class="container">
@@ -18,14 +17,18 @@ require "sidebar.php";
         </thead>
         <tbody>
             <?php
-            while ($user = mysqli_fetch_assoc($result)) { ?>
+            while ($user = mysqli_fetch_assoc($result)) {
+                $delete_url = 'delete.php?table=user&id=' . $user['id'];
+                ?>
+
                 <tr>
                     <td> <?php echo $user['id']; ?></td>
                     <td> <?php echo $user['fullname']; ?></td>
                     <td><?php echo $user['username']; ?></td>
                     <td>
                         <a href="edit_user.php?id=<!-- echo $user['id']; -->">Edit</a> |
-                        <a href="delete.php?id=<?php echo $user['id'] . "&table=user" ?>" onclick="return confirm('You want to delete it ?')">
+                        <a href="<?php echo $delete_url ?>" onclick="return confirm('You want to delete it ?')"
+                            type="button">
                             Delete
                         </a>
 
