@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <?php
 session_start();
 include 'header.php';
 $result = mysqli_query($connection, "SELECT * FROM categories");
-$stickers = mysqli_query($connection, "SELECT * FROM sticker");
+$stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested = false AND is_sold = false");
 ?>
+<!DOCTYPE html>
+<html lang="en">
+
 
 
 
@@ -30,7 +30,6 @@ $stickers = mysqli_query($connection, "SELECT * FROM sticker");
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $sticker['name'] ?></h5>
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <button class="btn btn-primary">Buy</button>
                                     <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
                                         class="btn btn-primary">Add to cart</a>
                                 </div>

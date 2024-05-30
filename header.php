@@ -9,8 +9,7 @@ if (isset($_SESSION['user'])) {
     }
 }
 ?>
-<html class="has-background-dark">
-
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +22,7 @@ if (isset($_SESSION['user'])) {
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/mizustars">
+            <a class="navbar-brand" href="/mizustickers">
                 <img src="logo2.png" alt="Logo" width="260">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -49,6 +48,10 @@ if (isset($_SESSION['user'])) {
                             </a>
                         </li>
                     <?php } else { ?>
+                        <li class="nav-item">
+                            <a href="orders.php" class="btn btn-primary"><i class="bi bi-upload"></i>&nbsp;
+                                My orders</a>
+                        </li>
                         <li class="nav-item">
                             <a href="uploadsticker.php" class="btn btn-primary"><i class="bi bi-upload"></i>&nbsp;Order
                                 Stickers</a>

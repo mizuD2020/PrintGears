@@ -18,7 +18,7 @@ $result = mysqli_query($conn, "SELECT * FROM user");
         <tbody>
             <?php
             while ($user = mysqli_fetch_assoc($result)) {
-                $delete_url = 'delete.php?table=user&id=' . $user['id'];
+                $delete_url = '../delete.php?table=user&id=' . $user['id'];
                 ?>
 
                 <tr>

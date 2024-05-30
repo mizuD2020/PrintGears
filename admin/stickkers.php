@@ -25,7 +25,7 @@
                         <tbody>
                             <?php
                             while ($sticker = mysqli_fetch_assoc($result)) {
-                                $delete_url = 'delete.php?table=sticker&id=' . $sticker['id'];
+                                $delete_url = '../delete.php?table=sticker&id=' . $sticker['id'];
                                 ?>
                                 <tr>
                                     <td data-label="Name"><?php echo $sticker['name']; ?></td>

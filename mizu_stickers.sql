@@ -20,7 +20,7 @@ CREATE TABLE `sticker` (
   `price` int(11) NOT NULL default 50,
   `image` text NOT NULL,
   `category_id` int(11) NOT NULL,
-  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`),
+  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ); 
 
@@ -33,10 +33,13 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 );
 
+
 CREATE TABLE `order`(
-  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `total` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `order_item`(
@@ -45,15 +48,15 @@ CREATE TABLE `order_item`(
   `sticker_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`order_id`) REFERENCES `order`(`id`),
-  FOREIGN KEY (`sticker_id`) REFERENCES `sticker`(`id`)
-);
+  FOREIGN KEY (`order_id`) REFERENCES `order`(`id`) ON DELETE CASCADE, 
+  FOREIGN KEY (`sticker_id`) REFERENCES `sticker`(`id`) ON DELETE CASCADE 
+); 
 
-CREATE TABLE `cart`(
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+CREATE TABLE `cart`( 
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  PRIMARY KEY (`id`), 
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)  ON DELETE CASCADE
 );
 
 CREATE TABLE `cart_item`(
@@ -62,18 +65,12 @@ CREATE TABLE `cart_item`(
   `sticker_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`),
-  FOREIGN KEY (`sticker_id`) REFERENCES `sticker`(`id`)
+  FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`sticker_id`) REFERENCES `sticker`(`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `customized_stickers` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `user_id` INT(11) NOT NULL,
-  `image_url` TEXT NOT NULL,
-  `quantity` INT(11) NOT NULL,
-  `price` DECIMAL(10, 2) NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-);
+ALTER TABLE `sticker`
+ADD COLUMN `is_requested` BOOLEAN DEFAULT FALSE;
 
+ALTER TABLE `sticker`
+ADD COLUMN `is_sold` BOOLEAN DEFAULT FALSE;

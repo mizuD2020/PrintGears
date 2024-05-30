@@ -23,7 +23,7 @@
                         <tbody>
                             <?php
                             while ($category = mysqli_fetch_assoc($result)) {
-                                $delete_url = 'delete.php?table=categories&id='.$category['id'];
+                                $delete_url = '../delete.php?table=categories&id='.$category['id'];
                                 ?>
                                 <tr>
                                     <td data-label="Name"><?php echo $category['name']; ?></td>
