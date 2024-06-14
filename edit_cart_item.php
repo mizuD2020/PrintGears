@@ -3,7 +3,7 @@ ob_start();
 session_start();
 include "header.php";
 $id = $_GET['id'];
-$cart_item = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart_item join sticker on sticker.id = cart_item.sticker_id WHERE cart_item.id = $id"));
+$cart_item = mysqli_fetch_assoc(mysqli_query($connection, "SELECT *, cart_item.quantity FROM cart_item join sticker on sticker.id = cart_item.sticker_id WHERE cart_item.id = $id"));
 if (isset($_POST['update'])) {
     $quantity = $_POST['quantity'];
     mysqli_query($connection, "UPDATE cart_item SET quantity = $quantity WHERE id = $id");

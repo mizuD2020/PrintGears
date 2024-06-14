@@ -77,3 +77,18 @@ ADD COLUMN `is_sold` BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE `sticker`
 ADD COLUMN `quantity` int(11) NOT NULL default 1;
+
+ALTER TABLE `order`
+ADD COLUMN `order_date` DATE;
+
+ALTER TABLE `sticker`
+RENAME COLUMN `quantity` TO `stock`;
+
+CREATE TABLE `order_history` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `sticker_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `order_date` datetime NOT NULL,
+  `expected_delivery_date` datetime NOT NULL
+)
