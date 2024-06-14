@@ -1,5 +1,7 @@
 <section class="main-content columns is-fullheight">
     <?php
+
+
     require ("sidebar.php");
     require ("dbconnect.php");
     $result = mysqli_query($conn, "SELECT * FROM sticker");
@@ -12,7 +14,7 @@
                     <a href="add_item.php" class="button is-primary">Add Stickers</a>
                 </div>
                 <div class="card-content">
-                    <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+                    <table class="table is-fullwidth is-striped is-hoverable">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -31,9 +33,9 @@
                                 ?>
                                 <tr>
                                     <td data-label="Name"><?php echo $sticker['name']; ?></td>
-                                    <td data-label="Desciption"><?php echo $sticker['description']; ?></td>
+                                    <td data-label="Description"><?php echo $sticker['description']; ?></td>
                                     <td data-label="Price"><?php echo $sticker['price']; ?></td>
-                                    <td data-label="Stock"><?php echo $sticker['quantity']; ?></td>
+                                    <td data-label="Stock"><?php echo $sticker['stock']; ?></td>
                                     <td data-label="Image"><img src="<?php echo $sticker['image']; ?>" height="30"
                                             width="30"></td>
                                     <td class="is-actions-cell">
@@ -55,5 +57,4 @@
             </div>
         </div>
     </div>
-
 </section>

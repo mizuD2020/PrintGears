@@ -1,87 +1,68 @@
 <?php
-
-
 session_start();
 include "header.php";
-
-// Ensure the user is logged in
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit;
-}
-
-// Database connection
 include "dbconnect.php";
 
-// Retrieve the user's cart
-$user_id = $_SESSION['user']['id'];
-$cart_query = mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '$user_id'");
-$cart = mysqli_fetch_assoc($cart_query);
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    // Redirect to login page or display a message
+    header("Location: login.php");
+    exit; // Stop further execution
+}
+
+// Retrieve user's cart
+$cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
 
 // Check if the cart exists
-if (!$cart) {
+if (!isset($cart['id'])) {
     die('<p>Your cart is empty.</p>');
 }
 
-$cart_id = $cart['id'];
-$cart_items_query = mysqli_query($connection, "
-    SELECT sticker.id, sticker.name, sticker.image, sticker.price, sticker.quantity AS stock_quantity, cart_item.quantity AS cart_quantity
+// Retrieve cart items
+$result = mysqli_query($connection, "
+    SELECT cart_item.id, sticker.id AS sticker_id, sticker.name, sticker.stock, cart_item.quantity
     FROM cart_item
     JOIN sticker ON sticker.id = cart_item.sticker_id
-    WHERE cart_item.cart_id = $cart_id
+    WHERE cart_item.cart_id = {$cart['id']}
 ");
 
-$cart_items = [];
-$total = 0;
-while ($row = mysqli_fetch_assoc($cart_items_query)) {
-    // Check if enough stock is available
-    if ($row['stock_quantity'] < $row['cart_quantity']) {
-        die("<p>Not enough stock for {$row['name']}. Available: {$row['stock_quantity']}, Requested: {$row['cart_quantity']}.</p>");
+// Process each item in the cart
+while ($row = mysqli_fetch_assoc($result)) {
+    $sticker_id = $row['sticker_id'];
+    $quantity = $row['quantity'];
+
+    // Check if sufficient stock is available
+    if ($row['stock'] < $quantity) {
+        die("<p>Sorry, there is not enough stock for '{$row['name']}' to fulfill your order.</p>");
     }
 
-    $cart_items[] = $row;
-    $total += $row['price'] * $row['cart_quantity'];
+    // Update the stock in the sticker table
+    $new_stock = $row['stock'] - $quantity;
+    $update_query = "UPDATE sticker SET stock = $new_stock WHERE id = $sticker_id";
+    if (!mysqli_query($connection, $update_query)) {
+        die("Error updating stock for '{$row['name']}': " . mysqli_error($connection));
+    }
 }
 
-// Insert order into the database
-$insert_order_query = "INSERT INTO `order` (user_id, total_amount) VALUES ($user_id, $total)";
+// Insert order into database
+$insert_order_query = "INSERT INTO `order` (user_id, total_amount) VALUES ({$_SESSION['user']['id']}, $total)";
 if (mysqli_query($connection, $insert_order_query)) {
-    $order_id = mysqli_insert_id($connection);
-
-    // Insert order items and update stock
-    foreach ($cart_items as $item) {
-        $sticker_id = $item['id'];
-        $cart_quantity = $item['cart_quantity'];
-        $price = $item['price'];
-
-        $insert_order_item_query = "
-            INSERT INTO order_item (order_id, sticker_id, quantity, price)
-            VALUES ($order_id, $sticker_id, $cart_quantity, $price)
-        ";
-
-        // Update the stock quantity
-        $new_stock_quantity = $item['stock_quantity'] - $cart_quantity;
-        $update_stock_query = "UPDATE sticker SET quantity = $new_stock_quantity WHERE id = $sticker_id";
-
-        if (!mysqli_query($connection, $insert_order_item_query) || !mysqli_query($connection, $update_stock_query)) {
-            die("Error updating order items or stock: " . mysqli_error($connection));
-        }
-    }
-
-
-    mysqli_query($connection, "DELETE FROM cart_item WHERE cart_id = $cart_id");
-
-
-    echo "<p>Order placed successfully! Total amount: Rs. $total</p>";
+    // Clear user's cart
+    mysqli_query($connection, "DELETE FROM cart_item WHERE cart_id = {$cart['id']}");
+    // Display success message
+    echo "<p>Order placed successfully! Total amount: $total</p>";
 } else {
-
+    // Display error message
     echo "Error placing order: " . mysqli_error($connection);
 }
+
+// Close the database connection
+mysqli_close($connection);
 ?>
 
 <!-- HTML for displaying success message -->
 <div class="container">
     <h1>Order Placed Successfully</h1>
-    <p>Total Amount: Rs. <?php echo $total; ?></p>
+    <p>Total Amount: <?php echo $total; ?></p>
     <p>Your cart is now empty.</p>
 </div>

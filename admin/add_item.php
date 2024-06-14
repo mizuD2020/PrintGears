@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
     $description = $_POST["description"];
     $price = $_POST["price"];
-    $quantity = $_POST["quantity"];
+    $stock = $_POST["stock"];
     $category = $_POST['category'];
 
     $file = $_FILES['image'];
@@ -21,14 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error occurred while uploading file");
     }
 
-    $sql = "INSERT INTO sticker (name, description, price, quantity, image, category_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO sticker (name, description, price, stock, image, category_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
         die("Prepare statement failed: " . $conn->error);
     }
 
-    $stmt->bind_param("ssiiss", $name, $description, $price, $quantity, $uploaded_file, $category);
+    $stmt->bind_param("ssiiss", $name, $description, $price, $stock, $uploaded_file, $category);
 
     if ($stmt->execute()) {
         echo "Sticker added successfully";
@@ -74,7 +74,7 @@ $conn->close();
                         <div class="field">
                             <label class="label">Stock</label>
                             <div class="control">
-                                <input class="input" type="number" name="quantity" placeholder="Stock" required>
+                                <input class="input" type="number" name="stock" placeholder="Stock" required>
                             </div>
                         </div>
                         <div class="field">
