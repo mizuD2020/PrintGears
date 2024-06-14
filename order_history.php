@@ -50,9 +50,11 @@ $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
                     <?php } ?>
                 </tbody>
             </table>
+            <!--
             <form action="clear_history.php" method="post">
                 <button type="submit" class="btn btn-danger mt-3">Clear History</button>
             </form>
+                    -->
         <?php } else { ?>
             <p class="alert alert-info">You have no order history.</p>
         <?php } ?>
