@@ -7,7 +7,23 @@ $stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested 
 <!DOCTYPE html>
 <html lang="en">
 
-
+<head>
+    <title>Sticker Shop</title>
+    <!-- Add your CSS and other header elements here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function () {
+            <?php if (isset($_SESSION['message'])) { ?>
+                Swal.fire({
+                    title: '<?php echo $_SESSION['message']; ?>',
+                    icon: '<?php echo $_SESSION['message'] == "Sticker added to cart!" ? "success" : "warning"; ?>'
+                });
+                <?php unset($_SESSION['message']); ?>
+            <?php } ?>
+        });
+    </script>
+</head>
 
 
 <?php

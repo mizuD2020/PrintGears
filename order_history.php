@@ -4,25 +4,29 @@ include "header.php";
 
 $user_id = $_SESSION['user']['id'];
 
-// Fetch orders
-$orders = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_item.quantity, `order`.order_date FROM order_item JOIN sticker ON sticker.id = order_item.sticker_id JOIN `order` ON `order`.id = order_item.order_id WHERE `order`.user_id = $user_id");
+// Fetch order history
+$order_history = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_history.quantity, order_history.expected_delivery_date FROM order_history JOIN sticker ON sticker.id = order_history.sticker_id WHERE order_history.user_id = $user_id");
 
-$order_items = mysqli_fetch_all($orders, MYSQLI_ASSOC);
-
-$grand_total = 0;
+$history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>My Orders</title>
+    <title>Order History</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="container">
-        <h1 class="my-4">My Orders</h1>
-        <?php if (!empty($order_items)) { ?>
+        <h1 class="my-4">Order History</h1>
+
+        <?php if (isset($_SESSION['message'])) { ?>
+            <div class="alert alert-info"><?php echo $_SESSION['message'];
+            unset($_SESSION['message']); ?></div>
+        <?php } ?>
+
+        <?php if (!empty($history_items)) { ?>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -30,34 +34,27 @@ $grand_total = 0;
                         <th scope="col">Name</th>
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Total</th>
+                        <th scope="col">Expected Delivery Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($order_items as $item) {
-                        $total_price = $item['price'] * $item['quantity'];
-                        $grand_total += $total_price;
-                        ?>
+                    <?php foreach ($history_items as $item) { ?>
                         <tr>
                             <td><img src="<?php echo $item['image'] ?>" class="img-fluid" style="max-height: 100px;"
                                     alt="<?php echo $item['name'] ?>"></td>
                             <td><?php echo $item['name'] ?></td>
                             <td>Rs <?php echo $item['price'] ?></td>
                             <td><?php echo $item['quantity'] ?></td>
-                            <td>Rs <?php echo $total_price ?></td>
+                            <td><?php echo $item['expected_delivery_date'] ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h4 class="card-title">Grand Total: Rs <?php echo $grand_total; ?></h4>
-                </div>
-            </div>
-            <a href="order_history.php" class="btn btn-info mt-3">History</a>
+            <form action="clear_history.php" method="post">
+                <button type="submit" class="btn btn-danger mt-3">Clear History</button>
+            </form>
         <?php } else { ?>
-            <p class="alert alert-warning">You have no orders.</p>
-            <a href="order_history.php" class="btn btn-info mt-3">History</a>
+            <p class="alert alert-info">You have no order history.</p>
         <?php } ?>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
