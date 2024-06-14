@@ -2,7 +2,7 @@
 session_start();
 include 'header.php';
 $result = mysqli_query($connection, "SELECT * FROM categories");
-$stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested = false AND is_sold = false");
+$stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested = false");
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -74,3 +74,6 @@ ADD COLUMN `is_requested` BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE `sticker`
 ADD COLUMN `is_sold` BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE `sticker`
+ADD COLUMN `quantity` int(11) NOT NULL default 1;

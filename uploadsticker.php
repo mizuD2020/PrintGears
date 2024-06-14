@@ -21,17 +21,6 @@ if (isset($_POST['submit'])) {
     mysqli_query($connection, $sql);
     $sticker_id = mysqli_insert_id($connection);
     header("Location: add_to_cart.php?sticker_id=$sticker_id");
-    // $user_id = $_SESSION['user']['id'];
-    // $existing_order = mysqli_fetch_assoc(mysqli_query($connection, "SELECT id from `order` where user_id = '$user_id'"));
-    // if ($existing_order) {
-    //     $sql = "INSERT INTO order_item(order_id, sticker_id, quantity) VALUES ('$existing_order[id]', '$sticker_id', 1)";
-    //     mysqli_query($connection, $sql);
-    // } else {
-    //     $sql = "INSERT INTO `order` (user_id) VALUES ('$user_id')";
-    //     mysqli_query($connection, $sql);
-    //     $order_id = mysqli_insert_id($connection);
-    //     $sql = "INSERT INTO order_item(order_id, sticker_id, quantity) VALUES ('$order_id', '$sticker_id', 1)";
-    // }
 
 }
 ?>
