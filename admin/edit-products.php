@@ -1,79 +1,62 @@
 <?php
-// Include the database connection file
-include "dbconnect.php";
-include "../upload.php";
+require ("dbconnect.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
+    $sticker_id = $_GET['id'];
+    $query = "SELECT * FROM sticker WHERE id = $sticker_id";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+        $sticker = mysqli_fetch_assoc($result);
+    } else {
+        die("Product not found");
+    }
+} else {
+    die("Invalid request");
+}
 
 // Fetch categories from the database
 $categories = mysqli_query($conn, "SELECT * FROM categories");
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $description = $_POST["description"];
-    $price = $_POST["price"];
-    $quantity = $_POST["quantity"];
-    $category = $_POST['category'];
-
-    $file = $_FILES['image'];
-    $uploaded_file = upload_file($file);
-
-    if (!$uploaded_file) {
-        die("Error occurred while uploading file");
-    }
-
-    $sql = "INSERT INTO sticker (name, description, price, quantity, image, category_id) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-
-    if (!$stmt) {
-        die("Prepare statement failed: " . $conn->error);
-    }
-
-    $stmt->bind_param("ssiiss", $name, $description, $price, $quantity, $uploaded_file, $category);
-
-    if ($stmt->execute()) {
-        echo "Sticker added successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }
-
-    $stmt->close();
-}
-
-// Close the database connection
-$conn->close();
 ?>
 
+<!-- Your HTML Form -->
 <section class="main-content columns is-fullheight">
-    <?php require "sidebar.php"; ?>
+    <?php require ("sidebar.php"); ?>
     <div class="container column is-10">
         <div class="section">
             <div class="card">
                 <div class="card-header">
-                    <p class="card-header-title">Add Sticker</p>
+                    <p class="card-header-title">Edit Sticker</p>
                 </div>
                 <div class="card-content">
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" action="update-product.php" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="<?php echo $sticker['id']; ?>">
                         <div class="field">
                             <label class="label">Name</label>
                             <div class="control">
-                                <input class="input" type="text" name="name" placeholder="Sticker Name" required>
+                                <input class="input" type="text" name="name" value="<?php echo $sticker['name']; ?>"
+                                    required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Description</label>
                             <div class="control">
-                                <input class="input" type="text" name="description" placeholder="Description" required>
+                                <input class="input" type="text" name="description"
+                                    value="<?php echo $sticker['description']; ?>" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Price</label>
                             <div class="control">
-                                <input class="input" type="text" name="price" placeholder="Price" required>
+                                <input class="input" type="text" name="price" value="<?php echo $sticker['price']; ?>"
+                                    required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Stock</label>
                             <div class="control">
-                                <input class="input" type="number" name="quantity" placeholder="Stock" required>
+                                <input class="input" type="number" name="quantity"
+                                    value="<?php echo $sticker['quantity']; ?>" required>
                             </div>
                         </div>
                         <div class="field">
@@ -81,10 +64,11 @@ $conn->close();
                             <div class="control">
                                 <div class="select">
                                     <select name="category" required>
-                                        <option value="" disabled selected>Select Category</option>
+                                        <option value="" disabled>Select Category</option>
                                         <?php
-                                        while ($row = $categories->fetch_assoc()) {
-                                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                                        while ($row = mysqli_fetch_assoc($categories)) {
+                                            $selected = ($row['id'] == $sticker['category_id']) ? 'selected' : '';
+                                            echo "<option value='{$row['id']}' $selected>{$row['name']}</option>";
                                         }
                                         ?>
                                     </select>
@@ -94,12 +78,12 @@ $conn->close();
                         <div class="field">
                             <label class="label">Image</label>
                             <div class="control">
-                                <input class="input" type="file" name="image" required>
+                                <input class="input" type="file" name="image">
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" type="submit">Add Sticker</button>
+                                <button class="button is-primary" type="submit">Update Sticker</button>
                             </div>
                         </div>
                     </form>

@@ -2,7 +2,8 @@
     <?php
     require ("sidebar.php");
     require ("dbconnect.php");
-    $result = mysqli_query($conn, "SELECT * FROM sticker");
+    $result = mysqli_query($conn, "SELECT * FROM order");
+    $result = mysqli_query($conn, "SELECT * FROM order_item");
     ?>
     <div class="container column is-10">
         <div class="section">
@@ -15,10 +16,10 @@
                     <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Stock</th>
+                                <th>User</th>
+                                <th>Sticker Name</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
                                 <th>Image</th>
                                 <th></th>
                             </tr>
@@ -27,7 +28,6 @@
                             <?php
                             while ($sticker = mysqli_fetch_assoc($result)) {
                                 $delete_url = '../delete.php?table=sticker&id=' . $sticker['id'];
-                                $edit_url = 'edit-products.php?id=' . $sticker['id'];
                                 ?>
                                 <tr>
                                     <td data-label="Name"><?php echo $sticker['name']; ?></td>
@@ -38,9 +38,9 @@
                                             width="30"></td>
                                     <td class="is-actions-cell">
                                         <div class="buttons is-right">
-                                            <a href="<?php echo $edit_url; ?>" class="button is-small is-primary">
+                                            <button class="button is-small is-primary" type="button">
                                                 Edit
-                                            </a>
+                                            </button>
                                             <a href="<?php echo $delete_url ?>" class="button is-small is-danger jb-modal"
                                                 data-target="sample-modal" type="button">
                                                 Delete

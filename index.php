@@ -18,7 +18,7 @@ $stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested 
     <div class="row">
         <div class="col-10">
             <h1 class="display-4">Recently Added</h1>
-            <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
                 <?php
                 while ($sticker = mysqli_fetch_assoc($stickers)) { ?>
                     <div class="col">
@@ -29,6 +29,8 @@ $stickers = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested 
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $sticker['name'] ?></h5>
+                                <h5 class="card-title"><?php echo "Rs " . $sticker['price'] ?></h5>
+
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
                                         class="btn btn-primary">Add to cart</a>

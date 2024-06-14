@@ -15,7 +15,8 @@
         <h1>Sign up</h1>
         <div>
           <label for="fullname">Name:</label> <br />
-          <input type="text" id="fullname" name="fullname" required />
+          <input type="text" id="fullname" name="fullname" pattern="[A-Za-z\s]+" title="Name should not contain numbers"
+            required />
         </div>
         <div>
           <label for="email">Email:</label> <br />

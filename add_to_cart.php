@@ -16,5 +16,4 @@ if ($existing_cart) {
 
 header("Location: cart.php")
 
-?>
-
+    ?>

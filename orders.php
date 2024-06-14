@@ -1,7 +1,6 @@
 <?php
 session_start();
 include "header.php";
-include "Sign/dbconnection.php";
 
 $user_id = $_SESSION['user']['id'];
 $orders = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_item.quantity FROM order_item JOIN sticker ON sticker.id = order_item.sticker_id JOIN `order` ON `order`.id = order_item.order_id WHERE `order`.user_id = $user_id");
@@ -16,7 +15,8 @@ $order_items = mysqli_fetch_all($orders, MYSQLI_ASSOC);
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="<?php echo $item['image'] ?>" class="img-fluid rounded-start" alt="<?php echo $item['name'] ?>">
+                    <img src="<?php echo $item['image'] ?>" class="img-fluid rounded-start"
+                        alt="<?php echo $item['name'] ?>">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">

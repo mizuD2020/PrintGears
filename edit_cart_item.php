@@ -16,18 +16,20 @@ if (isset($_POST['update'])) {
             <form method="post">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $cart_item['name'] ?>" disabled>
+                    <input type="text" class="form-control" id="name" name="name"
+                        value="<?php echo $cart_item['name'] ?>" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
-                    <input type="text" class="form-control" id="price" name="price" value="<?php echo $cart_item['price'] ?>" disabled>
+                    <input type="text" class="form-control" id="price" name="price"
+                        value="<?php echo $cart_item['price'] ?>" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" value="<?php echo $cart_item['quantity'] ?>" required>
+                    <input type="number" class="form-control" id="quantity" name="quantity"
+                        value="<?php echo $cart_item['quantity'] ?>" required>
                 </div>
                 <button type="submit" class="btn btn-primary" name="update">Update</button>
             </form>
         </div>
     </div>
-

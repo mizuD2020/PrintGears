@@ -10,7 +10,6 @@ $categories = mysqli_query($connection, "SELECT * FROM categories");
 if (isset($_POST['submit'])) {
     $name = $_POST['name'];
     $description = $_POST['description'];
-    $quantity = $_POST['quantity'];
     $category = $_POST['category'];
     $price = '50';
     $image = $_FILES['image'];
@@ -53,7 +52,7 @@ if (isset($_POST['submit'])) {
                     <select class="form-select" id="category" name="category" required>
                         <option>--Select One--</option>
                         <?php while ($category = mysqli_fetch_assoc($categories)) { ?>
-                            <option value="<?php echo $category['id']; ?>"><?php echo $category['name'];?></option>
+                            <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
                         <?php } ?>
                     </select>
                 </div>
