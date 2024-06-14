@@ -11,6 +11,11 @@
     $users_query = mysqli_query($conn, "SELECT COUNT(*) FROM user");
     $users_result = mysqli_fetch_row($users_query);
     $users_count = $users_result[0];
+
+    // Correct the query for counting orders
+    $orders_query = mysqli_query($conn, "SELECT COUNT(*) FROM `order`");
+    $orders_result = mysqli_fetch_row($orders_query);
+    $orders_count = $orders_result[0];
     ?>
     <div class="container column is-10">
         <div class="section">
@@ -50,7 +55,7 @@
                                     <p class="card-header-title">Orders</p>
                                 </div>
                                 <div class="card-content">
-                                    3
+                                    <?php echo $orders_count; ?>
                                 </div>
                             </div>
                         </div>

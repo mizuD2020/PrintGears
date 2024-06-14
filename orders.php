@@ -56,7 +56,7 @@ $grand_total = 0;
             </div>
             <a href="order_history.php" class="btn btn-info mt-3">History</a>
         <?php } else { ?>
-            <p class="alert alert-warning">You have no orders.</p>
+            <p class="alert alert-warning">Your order has been placed. Check history for details.</p>
             <a href="order_history.php" class="btn btn-info mt-3">History</a>
         <?php } ?>
     </div>
