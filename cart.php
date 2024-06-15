@@ -35,7 +35,7 @@ WHERE cart_item.cart_id = {$cart['id']}
                     $total = 0;
                     while ($row = mysqli_fetch_assoc($result)) {
                         $total += $row['price'] * $row['quantity'];
-                    ?>
+                        ?>
                         <tr>
                             <td><img src="<?php echo $row['image'] ?>" class="img-thumbnail" width="100"></td>
                             <td><?php echo $row['name'] ?></td>
@@ -44,7 +44,8 @@ WHERE cart_item.cart_id = {$cart['id']}
                             <td><?php echo $row['price'] * $row['quantity'] ?></td>
                             <td>
                                 <a href="edit_cart_item.php?id=<?php echo $row['id'] ?>" class="btn btn-primary">Edit</a>
-                                <a href="delete.php?id=<?php echo $row['id'] ?>&table=cart_item" class="btn btn-danger" onclick="return confirm('Do you sure want to delete the cart item ?')">Delete</a>
+                                <a href="delete.php?id=<?php echo $row['id'] ?>&table=cart_item" class="btn btn-danger"
+                                    onclick="return confirm('Do you sure want to delete the cart item ?')">Delete</a>
                             </td>
                         </tr>
                     <?php } ?>
