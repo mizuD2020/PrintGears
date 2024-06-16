@@ -1,7 +1,7 @@
 <section class="main-content columns is-fullheight">
     <?php
-    require("sidebar.php");
-    require("dbconnect.php");
+    require ("sidebar.php");
+    require ("dbconnect.php");
     $result = mysqli_query($conn, "SELECT * FROM categories");
     ?>
     <div class="container column is-10">
@@ -23,17 +23,20 @@
                         <tbody>
                             <?php
                             while ($category = mysqli_fetch_assoc($result)) {
-                                $delete_url = '../delete.php?table=categories&id='.$category['id'];
+                                $delete_url = '../delete.php?table=categories&id=' . $category['id'];
+                                $edit_url = 'edit-category.php?id=' . $category['id'];
                                 ?>
                                 <tr>
                                     <td data-label="Name"><?php echo $category['name']; ?></td>
-                                    <td data-label="Image"><img src="<?php echo $category['image']; ?>" height="30" width="30"></td>
+                                    <td data-label="Image"><img src="<?php echo $category['image']; ?>" height="30"
+                                            width="30"></td>
                                     <td class="is-actions-cell">
                                         <div class="buttons is-right">
-                                            <button class="button is-small is-primary" type="button">
+                                            <a href="<?php echo $edit_url; ?>" class="button is-small is-primary">
                                                 Edit
-                                            </button>
-                                            <a href="<?php echo $delete_url ?>" class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
+                                            </a>
+                                            <a href="<?php echo $delete_url ?>" class="button is-small is-danger jb-modal"
+                                                data-target="sample-modal" type="button">
                                                 Delete
                                             </a>
                                         </div>

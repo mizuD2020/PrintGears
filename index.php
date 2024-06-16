@@ -15,6 +15,7 @@ if (!empty($search_query)) {
     $category_ids = [];
     while ($row = mysqli_fetch_assoc($category_result)) {
         $category_ids[] = $row['id'];
+
     }
 
     // Fetch stickers with matching category IDs first
@@ -23,13 +24,15 @@ if (!empty($search_query)) {
         $sticker_query = "SELECT * FROM sticker WHERE category_id IN ($category_ids_str) AND is_requested = false";
         $sticker_query .= " ORDER BY FIELD(category_id, $category_ids_str) DESC";
         $stickers_result = mysqli_query($connection, $sticker_query);
+        $heading_text = $search_query;
         while ($row = mysqli_fetch_assoc($stickers_result)) {
             $stickers[] = $row;
         }
+    } else {
+        $heading_text = "Recently Added";
     }
-    $heading_text = $search_query;
+
 } else {
-    // If no specific category search, show default heading text
     $heading_text = "Recently Added";
 }
 
@@ -40,7 +43,9 @@ if (empty($stickers)) {
         $stickers[] = $row;
     }
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -80,8 +85,11 @@ if (empty($stickers)) {
     <style>
         body {
             background-color: black;
-
             /* Ensure content doesn't overlap with sticky header */
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         h1 {
@@ -93,9 +101,12 @@ if (empty($stickers)) {
             margin-bottom: 10px;
         }
 
-        .card-body {
-            background: dark;
+        .container {
+            margin: 0;
+
         }
+
+
 
         .category-card {
             cursor: pointer;
@@ -104,7 +115,7 @@ if (empty($stickers)) {
             padding: 10px;
             border-radius: 8px;
             transition: background-color 0.3s ease;
-            width: 200px;
+            width: 240px;
             /* Adjusted width */
             margin-bottom: 10px;
             /* Added margin for spacing between cards */
@@ -118,7 +129,7 @@ if (empty($stickers)) {
             margin-bottom: 10px;
             color: white;
             text-align: center;
-            width: 200px;
+            width: 240px;
             /* Adjusted width */
         }
 
@@ -135,9 +146,11 @@ if (empty($stickers)) {
             text-overflow: ellipsis;
         }
 
+
         /* Sticky category section */
         .sticky-category {
-            width: 220px;
+            /* margin-left: 40px; */
+            width: 260px;
             margin-top: 20px;
             position: sticky;
             top: 20px;
@@ -149,9 +162,15 @@ if (empty($stickers)) {
         .scrollable-categories {
             max-height: calc(100vh - 50px);
             /* Adjust height as needed */
-            overflow-y: auto;
+            overflow: scroll;
             padding-right: 5px;
             /* Adjust for scrollbar */
+        }
+
+        .scrollable-categories::-webkit-scrollbar {
+            width: 10px;
+            background-color: gray;
+            border-radius: 5px;
         }
 
         .scrollable-categories .list-group-item {
@@ -165,6 +184,10 @@ if (empty($stickers)) {
         .scrollable-categories .list-group-item:hover {
             background-color: #f0f0f0;
         }
+
+        .sticker_image {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -175,8 +198,8 @@ if (empty($stickers)) {
                 <h1><?php echo $heading_text; ?></h1>
                 <div class="row row-cols-1 row-cols-md-4 g-4">
                     <?php foreach ($stickers as $sticker) { ?>
-                        <div class="col">
-                            <div class="card h-100">
+                        <div>
+                            <div class="card h-80">
                                 <div class="sticker_image">
                                     <img src="<?php echo $sticker['image']; ?>" class="card-img-top img-fluid"
                                         alt="Sticker Image">
@@ -195,6 +218,7 @@ if (empty($stickers)) {
                     <?php } ?>
                 </div>
             </div>
+
             <div class="col-2">
                 <div class="sticky-category">
                     <div class="card-header">
@@ -205,18 +229,21 @@ if (empty($stickers)) {
                             <?php
                             $count = 0;
                             while ($category = mysqli_fetch_assoc($result)) {
-                                if ($count > 0 && $count % 5 == 0) {
-                                    echo '</div><div class="list-group list-group-flush">';
+                                if ($category['name'] != 'Custom') {
+                                    if ($count > 0 && $count % 5 == 0) {
+                                        echo '</div><div class="list-group list-group-flush">';
+                                    }
+                                    ?>
+                                    <div class="list-group-item category-card" data-category="<?php echo $category['name']; ?>">
+                                        <img src="<?php echo $category['image']; ?>" class="img-fluid" alt="Category Image">
+                                        <span><?php echo $category['name']; ?></span>
+                                    </div>
+                                    <?php
+                                    $count++;
                                 }
-                                ?>
-                                <div class="list-group-item category-card" data-category="<?php echo $category['name']; ?>">
-                                    <img src="<?php echo $category['image']; ?>" class="img-fluid" alt="Category Image">
-                                    <span><?php echo $category['name']; ?></span>
-                                </div>
-                                <?php
-                                $count++;
                             }
                             ?>
+
                         </div>
                     </div>
                 </div>

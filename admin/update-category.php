@@ -4,13 +4,8 @@ require ("dbconnect.php");
 require ("../upload.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
-    $sticker_id = $_POST['id'];
+    $category_id = $_POST['id'];
     $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
-    $category = $_POST['category'];
-
     // Check if a new file was uploaded
     if ($_FILES['image']['error'] == UPLOAD_ERR_OK) {
         $file = $_FILES['image'];
@@ -18,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
 
         if (!$uploaded_file) {
             $_SESSION['error_message'] = "Error occurred while uploading file";
-            header("Location: stickkers.php");
+            header("Location: categories.php");
             exit();
         }
     } else {
@@ -26,20 +21,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         $uploaded_file = $_POST['current_image'];
     }
 
-    $sql = "UPDATE sticker SET name = ?, description = ?, price = ?, stock = ?, image = ?, category_id = ? WHERE id = ?";
+    $sql = "UPDATE categories SET name = ?, image = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
         $_SESSION['error_message'] = "Prepare statement failed: " . $conn->error;
-        header("Location: stickkers.php");
+        header("Location: categories.php");
         exit();
     }
 
-    $stmt->bind_param("ssiissi", $name, $description, $price, $stock, $uploaded_file, $category, $sticker_id);
+    $stmt->bind_param("ssi", $name, $uploaded_file, $category_id);
 
     if ($stmt->execute()) {
         // Set success message
-        $_SESSION['success_message'] = "Sticker updated successfully";
+        $_SESSION['success_message'] = "Category updated successfully";
     } else {
         $_SESSION['error_message'] = "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -53,6 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
 $conn->close();
 
 // Redirect to stickers.php
-header("Location: stickkers.php");
+header("Location: categories.php");
 exit();
 ?>

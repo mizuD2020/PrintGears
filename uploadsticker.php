@@ -5,6 +5,14 @@ session_start();
 include "header.php";
 include "upload.php";
 $categories = mysqli_query($connection, "SELECT * FROM categories");
+function checkCategory($category)
+{
+    if ($category == 'Custom') {
+        return 'selected';
+    } else {
+        return 'disabled';
+    }
+}
 ?>
 <?php
 if (isset($_POST['submit'])) {
@@ -24,6 +32,15 @@ if (isset($_POST['submit'])) {
 
 }
 ?>
+<style>
+    .form-label {
+        color: white;
+        font-size: 20px;
+
+        .container {
+            margin-top: 40px;
+        }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-lg-6 mx-auto">
@@ -41,7 +58,9 @@ if (isset($_POST['submit'])) {
                     <select class="form-select" id="category" name="category" required>
                         <option>--Select One--</option>
                         <?php while ($category = mysqli_fetch_assoc($categories)) { ?>
-                            <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+                            <option value="<?php echo $category['id']; ?>" <?php echo checkCategory($category['name']); ?>>
+                                <?php echo $category['name']; ?>
+                            </option>
                         <?php } ?>
                     </select>
                 </div>

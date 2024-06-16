@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
                                 My orders</a>
                         </li>
                         <li class="nav-item">
-                            <a href="uploadsticker.php" class="btn btn-primary"><i class="bi bi-upload"></i>&nbsp;Order
+                            <a href="uploadsticker.php" class="btn btn-primary"><i class="bi bi-upload"></i>&nbsp;Customize
                                 Stickers</a>
                         </li>
                         <li class="nav-item position-relative">

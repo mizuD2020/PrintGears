@@ -35,8 +35,8 @@ $order_items = mysqli_fetch_all($orders, MYSQLI_ASSOC);
                     <td>Rs <?php echo $item['price'] * $item['quantity']; ?></td>
                     <td><?php echo date('F j, Y', strtotime($item['order_date'])); ?></td>
                     <td>
-                        <button class="btn btn-success" onclick="markOrderReceived(<?php echo $item['id']; ?>)">Order
-                            Received</button>
+                        <button class="btn btn-success" onclick="markOrderReceived(<?php echo $item['id']; ?>)">Receive
+                            order</button>
                     </td>
                 </tr>
             <?php } ?>

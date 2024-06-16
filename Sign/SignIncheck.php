@@ -1,38 +1,42 @@
 <?php
-
-
 session_start();
-
-include ("dbconnection.php");
+require_once 'dbconnection.php';
 
 if (isset($_POST["signIn"])) {
     $email = $_POST['email'];
-    $Password = $_POST['password'];
+    $password = $_POST['password'];
 
-    $query = "SELECT * FROM `user` WHERE `email` = '$email'";
-    $result = mysqli_query($connection, $query);
+    $query = "SELECT * FROM `user` WHERE `email` = ?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_num_rows($result) == 1) {
-        $row = mysqli_fetch_assoc($result);
-        if (password_verify($Password, $row['password'])) {
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
             $_SESSION['user'] = $row;
             $_SESSION['Role_as'] = $row['Role_as'];
+            $_SESSION['message'] = "SignIn successful";
+            $_SESSION['message_type'] = "success";
 
             if ($row['Role_as'] == 1) {
-                $_SESSION['message'] = "Logged in successfully";
                 header('Location: ../admin/index.php');
             } else {
                 header('Location: ../index.php');
             }
-            exit;
+            exit();
         } else {
-            header("Location: signIn.php?error=Invalid%20password");
+            $_SESSION['message'] = "Invalid password";
+            $_SESSION['message_type'] = "error";
+            header("Location: signIn.php");
+            exit();
         }
     } else {
-        header("Location: signIn.php?error=Invalid%20username");
+        $_SESSION['message'] = "Invalid email address";
+        $_SESSION['message_type'] = "error";
+        header("Location: signIn.php");
+        exit();
     }
 }
-
-
-
 ?>

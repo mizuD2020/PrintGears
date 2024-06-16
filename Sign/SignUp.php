@@ -48,9 +48,48 @@
       <img src="../images/Saitama ok.png" alt="Saitama Picture" />
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script>
+    $(document).ready(function () {
+      <?php session_start();
+      if (isset($_SESSION['message'])) { ?>
+        Swal.fire({
+          title: '<?php echo $_SESSION['message']; ?>',
+          icon: '<?php echo $_SESSION['message_type']; ?>'
+        }).then(() => {
+          <?php if (isset($_GET['redirect']) && $_SESSION['message_type'] == 'success') { ?>
+            window.location.href = 'signIn.php';
+          <?php } ?>
+        });
+        <?php unset($_SESSION['message']);
+        unset($_SESSION['message_type']); ?>
+      <?php } ?>
+    });
 
-  <script src="Scripts.js">
+    function checkPasswordMatch() {
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirmPassword").value;
+      var mismatchDiv = document.getElementById("passwordMismatch");
+      if (password !== confirmPassword) {
+        mismatchDiv.style.display = "block";
+      } else {
+        mismatchDiv.style.display = "none";
+      }
+    }
 
+    function validateForm() {
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirmPassword").value;
+      if (password !== confirmPassword) {
+        Swal.fire({
+          title: 'Passwords do not match!',
+          icon: 'warning'
+        });
+        return false;
+      }
+      return true;
+    }
   </script>
 </body>
 

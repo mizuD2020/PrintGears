@@ -1,7 +1,14 @@
 <section class="main-content columns is-fullheight">
     <?php
+    session_start();
+
     require ("sidebar.php");
     require ("dbconnect.php");
+    if (!isset($_SESSION['user']) && $_SESSION['Role_as'] !== 1) {
+
+        header("Location: ../Sign/SignIn.php"); // Redirect to login page if not logged in or not an admin
+        exit();
+    }
 
     // Correct queries to count rows in sticker and user tables
     $stickers_query = mysqli_query($conn, "SELECT COUNT(*) FROM sticker");

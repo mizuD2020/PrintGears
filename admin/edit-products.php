@@ -55,37 +55,36 @@ $categories = mysqli_query($conn, "SELECT * FROM categories");
                         <div class="field">
                             <label class="label">Stock</label>
                             <div class="control">
-                                <input class="input" type="number" name="quantity"
-                                    value="<?php echo $sticker['quantity']; ?>" required>
+                                <input class="input" type="number" name="stock"
+                                    value="<?php echo $sticker['stock']; ?>">
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Category</label>
-                            <div class="control">
-                                <div class="select">
-                                    <select name="category" required>
-                                        <option value="" disabled>Select Category</option>
-                                        <?php
-                                        while ($row = mysqli_fetch_assoc($categories)) {
-                                            $selected = ($row['id'] == $sticker['category_id']) ? 'selected' : '';
-                                            echo "<option value='{$row['id']}' $selected>{$row['name']}</option>";
-                                        }
-                                        ?>
-                                    </select>
+                            <div class="field">
+                                <label class="label">Category</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="category" required>
+                                            <option value="" disabled>Select Category</option>
+                                            <?php
+                                            while ($row = mysqli_fetch_assoc($categories)) {
+                                                $selected = ($row['id'] == $sticker['category_id']) ? 'selected' : '';
+                                                echo "<option value='{$row['id']}' $selected>{$row['name']}</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Image</label>
-                            <div class="control">
-                                <input class="input" type="file" name="image">
+                            <div class="field">
+                                <label class="label">Image</label>
+                                <div class="control">
+                                    <input class="input" type="file" name="image">
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-primary" type="submit">Update Sticker</button>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary" type="submit">Update Sticker</button>
+                                </div>
                             </div>
-                        </div>
                     </form>
                 </div>
             </div>

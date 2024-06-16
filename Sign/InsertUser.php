@@ -1,47 +1,49 @@
 <?php
+session_start();
+require_once 'dbconnection.php';
 
-include ("dbconnection.php");
-
-if (isset($_POST["signUp"])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $fullname = $_POST['fullname'];
+    $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $email = $_POST['email'];
-    $fullname = $_POST['fullname'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    // check username already exists
+    if ($password !== $confirmPassword) {
+        $_SESSION['message'] = 'Passwords do not match!';
+        $_SESSION['message_type'] = 'warning';
+        header('Location: signUpPage.php');
+        exit();
+    }
+
+    // Check if username already exists
     $stmt = $connection->prepare("SELECT * FROM user WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Username already exists, handle accordingly (e.g., show error message)
-        echo "Username is already taken. Please choose another one.";
-        exit(); // Stop further execution
+        $_SESSION['message'] = 'Username is already taken!';
+        $_SESSION['message_type'] = 'warning';
+        header('Location: signUpPage.php');
+        exit();
     }
 
-    if (empty($username) || empty($password) || empty($confirmPassword) || empty($email) || empty($fullname)) {
-        header('location:signup.php?message=All fields are required');
-        exit;
-    }
+    // Insert new user
+    $stmt = $connection->prepare("INSERT INTO user (fullname, email, username, password) VALUES (?, ?, ?, ?)");
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    $stmt->bind_param("ssss", $fullname, $email, $username, $hashedPassword);
 
-    if ($password !== $confirmPassword) {
-        header('location:signup.php?message=Passwords do not match');
-        exit;
-    }
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $query = "INSERT INTO `user` (`username`, `password`, `email`, `fullname`) VALUES ('$username', '$hashedPassword', '$email', '$fullname')";
-    $result = mysqli_query($connection, $query);
-
-    if (!$result) {
-        die("Query Failed" . mysqli_error($connection));
+    if ($stmt->execute()) {
+        $_SESSION['message'] = 'SignUp successful!';
+        $_SESSION['message_type'] = 'success';
+        header('Location: signIn.php');
+        exit();
     } else {
-        header('location:signIn.php?InsertUser_message=Sign Up successful');
-        exit;
+        $_SESSION['message'] = 'Error during sign-up!';
+        $_SESSION['message_type'] = 'error';
+        header('Location: signUpPage.php');
+        exit();
     }
 }
-
 ?>

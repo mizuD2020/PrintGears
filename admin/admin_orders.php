@@ -13,6 +13,7 @@ $users = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM user J
 <head>
     <title>Admin Orders</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .order-details {
@@ -21,7 +22,7 @@ $users = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM user J
     </style>
 </head>
 
-<body>
+<body class="bg-dark">
     <section class="main-content columns is-fullheight">
         <?php require ("sidebar.php"); ?>
         <div class="container column is-10">
@@ -29,7 +30,8 @@ $users = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM user J
                 <div class="card">
                     <div class="card-header">
                         <p class="card-header-title">User Orders</p>
-                        <a href="admin_order_history.php" class="btn btn-secondary ml-auto">View Order History</a>
+                        <a href="admin_order_history.php" class="text-decoration-none button is-primary">View Order
+                            History</a>
                     </div>
                     <div class="card-content">
                         <div class="list-group">

@@ -13,6 +13,7 @@ $users_query = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM 
 <head>
     <title>Admin Order History</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .order-details {
@@ -21,7 +22,7 @@ $users_query = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM 
     </style>
 </head>
 
-<body>
+<body class="bg-dark">
     <section class="main-content columns is-fullheight">
         <?php require ("sidebar.php"); ?>
         <div class="container column is-10">
