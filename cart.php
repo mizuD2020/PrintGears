@@ -16,6 +16,15 @@ WHERE cart_item.cart_id = {$cart['id']}
 ");
 
 ?>
+<style>
+    h1 {
+        color: white;
+    }
+
+    p {
+        color: white;
+    }
+</style>
 <div class="container">
     <h1 class="my-4">Your Cart</h1>
     <?php if (mysqli_num_rows($result) > 0) { ?>
@@ -28,6 +37,7 @@ WHERE cart_item.cart_id = {$cart['id']}
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Total</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>

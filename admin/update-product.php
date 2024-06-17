@@ -25,7 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         // Keep existing image if no new file uploaded
         $uploaded_file = $_POST['current_image'];
     }
-
+    if ($stock <= 0) {
+        die('<div class="alert alert-danger">Stock must be greater than 0.</div>');
+    }
     $sql = "UPDATE sticker SET name = ?, description = ?, price = ?, stock = ?, image = ?, category_id = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
 

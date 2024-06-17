@@ -15,13 +15,12 @@ if (!empty($search_query)) {
     $category_ids = [];
     while ($row = mysqli_fetch_assoc($category_result)) {
         $category_ids[] = $row['id'];
-
     }
 
-    // Fetch stickers with matching category IDs first
+    // Fetch stickers with matching category IDs and stock greater than 0
     if (!empty($category_ids)) {
         $category_ids_str = implode(",", $category_ids);
-        $sticker_query = "SELECT * FROM sticker WHERE category_id IN ($category_ids_str) AND is_requested = false";
+        $sticker_query = "SELECT * FROM sticker WHERE category_id IN ($category_ids_str) AND stock > 0 AND is_requested = false";
         $sticker_query .= " ORDER BY FIELD(category_id, $category_ids_str) DESC";
         $stickers_result = mysqli_query($connection, $sticker_query);
         $heading_text = $search_query;
@@ -31,21 +30,18 @@ if (!empty($search_query)) {
     } else {
         $heading_text = "Recently Added";
     }
-
 } else {
     $heading_text = "Recently Added";
 }
 
-// If no specific category search, fetch all stickers
+// If no specific category search, fetch all stickers with stock greater than 0
 if (empty($stickers)) {
-    $stickers_result = mysqli_query($connection, "SELECT * FROM sticker WHERE is_requested = false");
+    $stickers_result = mysqli_query($connection, "SELECT * FROM sticker WHERE stock > 0 AND is_requested = false");
     while ($row = mysqli_fetch_assoc($stickers_result)) {
         $stickers[] = $row;
     }
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,12 +81,14 @@ if (empty($stickers)) {
     <style>
         body {
             background-color: black;
-            /* Ensure content doesn't overlap with sticky header */
+            margin: 0;
+            padding: 0;
         }
 
         body::-webkit-scrollbar {
             display: none;
         }
+
 
         h1 {
             color: white;
@@ -102,11 +100,21 @@ if (empty($stickers)) {
         }
 
         .container {
-            margin: 0;
 
+            display: flex;
+            justify-content: space-between;
         }
 
 
+        .category-section {
+            width: 280px;
+            margin-left: auto;
+            /* Push category section to the right */
+            margin-right: 20px;
+            right: 0;
+            position: fixed;
+            /* 20px margin between category and stickers */
+        }
 
         .category-card {
             cursor: pointer;
@@ -115,22 +123,11 @@ if (empty($stickers)) {
             padding: 10px;
             border-radius: 8px;
             transition: background-color 0.3s ease;
-            width: 240px;
-            /* Adjusted width */
             margin-bottom: 10px;
-            /* Added margin for spacing between cards */
         }
 
         .category-card:hover {
             background-color: #f0f0f0;
-        }
-
-        .card-header {
-            margin-bottom: 10px;
-            color: white;
-            text-align: center;
-            width: 240px;
-            /* Adjusted width */
         }
 
         .category-card img {
@@ -146,25 +143,18 @@ if (empty($stickers)) {
             text-overflow: ellipsis;
         }
 
-
-        /* Sticky category section */
         .sticky-category {
-            /* margin-left: 40px; */
-            width: 260px;
-            margin-top: 20px;
+            width: 280px;
             position: sticky;
+            position: right;
             top: 20px;
-            /* Adjust as needed */
             z-index: 1000;
         }
 
-        /* Separate scrollable area for categories */
         .scrollable-categories {
             max-height: calc(100vh - 50px);
-            /* Adjust height as needed */
             overflow: scroll;
             padding-right: 5px;
-            /* Adjust for scrollbar */
         }
 
         .scrollable-categories::-webkit-scrollbar {
@@ -185,66 +175,104 @@ if (empty($stickers)) {
             background-color: #f0f0f0;
         }
 
+        .sticker-section {
+            width: calc(100% - 280px);
+            /* Subtract the width of the category section plus margin */
+            margin-right: 20px;
+            /* Add margin on the right side to create space */
+        }
+
         .sticker_image {
             padding: 10px;
+            width: 100%;
+            height: 180px;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: 180px;
+        }
+
+        .card-body {
+            width: 200px;
+        }
+
+        .card {
+            width: 200px;
+            background-color: #333;
+            border: none;
+        }
+
+        .card-title,
+        .card-text {
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        h5 {
+            text-align: center;
+            color: white;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            font-size: 30px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-10">
-                <h1><?php echo $heading_text; ?></h1>
-                <div class="row row-cols-1 row-cols-md-4 g-4">
-                    <?php foreach ($stickers as $sticker) { ?>
-                        <div>
-                            <div class="card h-80">
-                                <div class="sticker_image">
-                                    <img src="<?php echo $sticker['image']; ?>" class="card-img-top img-fluid"
-                                        alt="Sticker Image">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><?php echo $sticker['name']; ?></h5>
-                                    <h5 class="card-title"><?php echo "Rs " . $sticker['price']; ?></h5>
-
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
-                                            class="btn btn-primary">Add to cart</a>
-                                    </div>
+        <div class="sticker-section">
+            <h1><?php echo $heading_text; ?></h1>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <?php foreach ($stickers as $sticker) { ?>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="sticker_image">
+                                <img src="<?php echo $sticker['image']; ?>" class="card-img-top img-fluid"
+                                    alt="Sticker Image">
+                            </div>
+                            <div class=" card-body">
+                                <h4 class="card-title"><?php echo $sticker['name']; ?></h4>
+                                <h6 class="card-title"><?php echo "Rs." . $sticker['price'] . " per sticker"; ?></h6>
+                                <h6 class="card-title"><?php echo "Stock " . $sticker['stock']; ?></h6>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
+                                        class="btn btn-primary">Add to cart</a>
                                 </div>
                             </div>
                         </div>
-                    <?php } ?>
-                </div>
-            </div>
-
-            <div class="col-2">
-                <div class="sticky-category">
-                    <div class="card-header">
-                        <h5 class="mb-0">Categories</h5>
                     </div>
-                    <div class="scrollable-categories">
-                        <div class="list-group list-group-flush">
-                            <?php
-                            $count = 0;
-                            while ($category = mysqli_fetch_assoc($result)) {
-                                if ($category['name'] != 'Custom') {
-                                    if ($count > 0 && $count % 5 == 0) {
-                                        echo '</div><div class="list-group list-group-flush">';
-                                    }
-                                    ?>
-                                    <div class="list-group-item category-card" data-category="<?php echo $category['name']; ?>">
-                                        <img src="<?php echo $category['image']; ?>" class="img-fluid" alt="Category Image">
-                                        <span><?php echo $category['name']; ?></span>
-                                    </div>
-                                    <?php
-                                    $count++;
+                <?php } ?>
+            </div>
+        </div>
+        <div class="category-section">
+            <div class="sticky-category">
+                <div class="card-header">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
+                <div class="scrollable-categories">
+                    <div class="list-group list-group-flush">
+                        <?php
+                        $count = 0;
+                        while ($category = mysqli_fetch_assoc($result)) {
+                            if ($category['name'] != 'Custom') {
+                                if ($count > 0 && $count % 5 == 0) {
+                                    echo '</div><div class="list-group list-group-flush">';
                                 }
+                                ?>
+                                <div class="list-group-item category-card" data-category="<?php echo $category['name']; ?>">
+                                    <img src="<?php echo $category['image']; ?>" class="img-fluid" alt="Category Image">
+                                    <span><?php echo $category['name']; ?></span>
+                                </div>
+                                <?php
+                                $count++;
                             }
-                            ?>
-
-                        </div>
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

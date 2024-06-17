@@ -5,7 +5,7 @@ include "header.php";
 $user_id = $_SESSION['user']['id'];
 
 // Fetch order history
-$order_history = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_history.quantity, order_history.expected_delivery_date FROM order_history JOIN sticker ON sticker.id = order_history.sticker_id WHERE order_history.user_id = $user_id");
+$order_history = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_history.quantity, order_history.order_date, order_history.expected_delivery_date FROM order_history JOIN sticker ON sticker.id = order_history.sticker_id WHERE order_history.user_id = $user_id");
 
 $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
 ?>
@@ -34,6 +34,7 @@ $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
                         <th scope="col">Name</th>
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
+                        <th scope="col">Order Date</th>
                         <th scope="col">Expected Delivery Date</th>
                     </tr>
                 </thead>
@@ -45,7 +46,8 @@ $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
                             <td><?php echo $item['name'] ?></td>
                             <td>Rs <?php echo $item['price'] ?></td>
                             <td><?php echo $item['quantity'] ?></td>
-                            <td><?php echo $item['expected_delivery_date'] ?></td>
+                            <td><?php echo date('F j, Y', strtotime($item['order_date'])); ?></td>
+                            <td><?php echo date('F j, Y', strtotime($item['expected_delivery_date'])); ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

@@ -29,7 +29,8 @@ $categories = mysqli_query($conn, "SELECT * FROM categories");
                     <p class="card-header-title">Edit Sticker</p>
                 </div>
                 <div class="card-content">
-                    <form method="post" action="update-product.php" enctype="multipart/form-data">
+                    <form method="post" action="update-product.php" enctype="multipart/form-data"
+                        onsubmit="return validateForm(event)">
                         <input type="hidden" name="id" value="<?php echo $sticker['id']; ?>">
                         <div class="field">
                             <label class="label">Name</label>
@@ -91,3 +92,15 @@ $categories = mysqli_query($conn, "SELECT * FROM categories");
         </div>
     </div>
 </section>
+
+<script>
+    function validateForm(event) {
+        var stock = document.querySelector('input[name="stock"]').value;
+        if (stock <= 0) {
+            alert("Stock must be greater than 0.");
+            event.preventDefault(); // Prevent the form from submitting
+            return false;
+        }
+        return true;
+    }
+</script>

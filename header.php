@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
 
         body {
             background-color: black;
+
         }
     </style>
 </head>

@@ -14,6 +14,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock = $_POST["stock"];
     $category = $_POST['category'];
 
+    if ($stock <= 0) {
+        die('<div class="alert alert-danger">Stock must be greater than 0.</div>');
+    }
+
     $file = $_FILES['image'];
     $uploaded_file = upload_file($file);
 
@@ -52,7 +56,7 @@ $conn->close();
                     <p class="card-header-title">Add Sticker</p>
                 </div>
                 <div class="card-content">
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" onsubmit="return validateForm(event)">
                         <div class="field">
                             <label class="label">Name</label>
                             <div class="control">
@@ -109,3 +113,14 @@ $conn->close();
         </div>
     </div>
 </section>
+<script>
+    function validateForm(event) {
+        var stock = document.querySelector('input[name="stock"]').value;
+        if (stock <= 0) {
+            alert("Stock must be greater than 0.");
+            event.preventDefault(); // Prevent the form from submitting
+            return false;
+        }
+        return true;
+    }
+</script>
