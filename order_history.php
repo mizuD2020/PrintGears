@@ -16,6 +16,15 @@ $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
     <title>Order History</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+<style>
+    body {
+        background-color: black;
+    }
+
+    h1 {
+        color: white;
+    }
+</style>
 
 <body>
     <div class="container">

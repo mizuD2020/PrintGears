@@ -19,6 +19,16 @@ $grand_total = 0;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
+<style>
+    body {
+        background-color: black;
+    }
+
+    h1 {
+        color: white;
+    }
+</style>
+
 <body>
     <div class="container">
         <h1 class="my-4">My Orders</h1>

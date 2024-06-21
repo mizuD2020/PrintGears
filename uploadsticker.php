@@ -20,15 +20,17 @@ if (isset($_POST['submit'])) {
     $description = $_POST['description'];
     $category = $_POST['category'];
     $price = '50';
+    $quantity = $_POST['stock'];
     $image = $_FILES['image'];
     $url = upload_file($image);
+
     if (!$url) {
         die("Error occured while uploading file");
     }
-    $sql = "INSERT INTO sticker (name, description, category_id, image, price, is_requested) VALUES ('$name', '$description', '$category', '$url', $price, true)";
+    $sql = "INSERT INTO sticker (name, description, category_id, image, price, stock, is_requested) VALUES ('$name', '$description', '$category', '$url', $price, '$quantity', true)";
     mysqli_query($connection, $sql);
     $sticker_id = mysqli_insert_id($connection);
-    header("Location: add_to_cart.php?sticker_id=$sticker_id");
+    header("Location: add_to_cart.php?sticker_id=$sticker_id&quantity=$quantity");
 
 }
 ?>
@@ -36,10 +38,11 @@ if (isset($_POST['submit'])) {
     .form-label {
         color: white;
         font-size: 20px;
+    }
 
-        .container {
-            margin-top: 40px;
-        }
+    .container {
+        margin-top: 40px;
+    }
 </style>
 <div class="container">
     <div class="row">
@@ -53,6 +56,11 @@ if (isset($_POST['submit'])) {
                     <label for="description" class="form-label">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="int" class="form-control" id="quantity" name="stock" rows="3" required></>
+                </div>
+                <input type="int" name="is_requested" value="1" hidden id="is_requested" />
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
                     <select class="form-select" id="category" name="category" required>

@@ -2,7 +2,7 @@
 ob_start();
 session_start();
 include "header.php";
-include "dbconnect.php";
+
 
 $id = $_GET['id'];
 $cart_item = mysqli_fetch_assoc(mysqli_query($connection, "SELECT *, cart_item.quantity FROM cart_item JOIN sticker ON sticker.id = cart_item.sticker_id WHERE cart_item.id = $id"));
@@ -19,6 +19,7 @@ if (isset($_POST['update'])) {
         header("Location: cart.php");
     }
 }
+
 ?>
 <style>
     .form-label {

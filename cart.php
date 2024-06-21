@@ -68,6 +68,7 @@ WHERE cart_item.cart_id = {$cart['id']}
                         $order = mysqli_query($connection, "INSERT INTO `order` (user_id, total) VALUES ('{$_SESSION['user']['id']}', '$total')");
                         $order_id = mysqli_insert_id($connection);
                         $cart_item_result = mysqli_query($connection, "SELECT cart_item.*, sticker.stock FROM cart_item join sticker on sticker.id = cart_item.sticker_id WHERE cart_id = {$cart['id']} ");
+
                         while ($cart_item = mysqli_fetch_assoc($cart_item_result)) {
                             $new_stock = $cart_item['stock'] - $cart_item['quantity'];
                             mysqli_query($connection, "UPDATE sticker SET stock=$new_stock WHERE id = '{$cart_item['sticker_id']}'");

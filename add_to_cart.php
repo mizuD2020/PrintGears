@@ -4,6 +4,11 @@ session_start();
 include "Sign/dbconnection.php";
 
 $sticker_id = $_GET['sticker_id'];
+$quantity = 1;
+if ($_GET['quantity']) {
+    $quantity = $_GET['quantity'];
+}
+
 $user_id = $_SESSION['user']['id'];
 
 // Fetch the sticker's stock
@@ -31,7 +36,7 @@ if ($sticker['stock'] <= 0) {
             $_SESSION['message'] = "Sticker is already in the cart!";
         } else {
             // Add the sticker to the cart
-            $sql = "INSERT INTO cart_item(cart_id, sticker_id, quantity) VALUES ('$cart_id', '$sticker_id', 1)";
+            $sql = "INSERT INTO cart_item(cart_id, sticker_id, quantity) VALUES ('$cart_id', '$sticker_id', '$quantity')";
             mysqli_query($connection, $sql);
             $_SESSION['message'] = "Sticker added to cart!";
         }
