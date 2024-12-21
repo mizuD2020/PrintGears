@@ -1,14 +1,19 @@
 <?php
-include "header.php";
 session_start();
+$order_id = $_GET['order_id'];
+require "Sign/dbconnection.php";
+$order = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM `order` WHERE id = $order_id"));
+if (!$order) {
+    die('Order not found.');
+}
 if (isset($_POST['submit'])) {
     $paymethod = $_POST['payment_method'];
     if ($paymethod == "khalti") {
         $curl = curl_init();
         $data = json_encode(array(
-            "return_url" => "http://" . $_SERVER['HTTP_HOST'] . "/mizustickers/purchase.php",
-            "website_url" => "http://" . $_SERVER['HTTP_HOST'] . "/mizustickers",
-            "amount" => "1000",
+            "return_url" => "http://" . $_SERVER['HTTP_HOST'] . "/PrintGears/purchase.php",
+            "website_url" => "http://" . $_SERVER['HTTP_HOST'] . "/PrintGears",
+            "amount" => $order['total'] * 100,
             "purchase_order_id" => $_GET['order_id'],
             "purchase_order_name" => "test",
             "customer_info" => array(
@@ -36,6 +41,7 @@ if (isset($_POST['submit'])) {
 
         curl_close($curl);
         header("Location: " . json_decode($response)->payment_url);
+        exit();
     } else {
         $order_id = $_GET['order_id'];
         $sql = "UPDATE `order` SET order_status = 'paid', payment_method = 'COD' WHERE id = $order_id";
@@ -47,6 +53,7 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+require "header.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">

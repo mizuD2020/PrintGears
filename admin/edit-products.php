@@ -1,5 +1,6 @@
 <?php
 require("dbconnect.php");
+require "../upload.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $product_id = $_GET['id'];
@@ -11,6 +12,48 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     } else {
         die("Product not found");
     }
+} else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
+    $product_id = $_POST['id'];
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+    $category_id = $_POST['category'];
+    $image = $_FILES["image"];
+    $target_dir = "uploads/";
+
+    $update_fields = [];
+    if (!empty($name)) {
+        $update_fields[] = "name='$name'";
+    }
+    if (!empty($description)) {
+        $update_fields[] = "description='$description'";
+    }
+    if (!empty($price)) {
+        $update_fields[] = "price='$price'";
+    }
+    if (!empty($stock)) {
+        $update_fields[] = "stock='$stock'";
+    }
+    if (!empty($category_id)) {
+        $update_fields[] = "category_id='$category_id'";
+    }
+    if (!empty($image)) {
+        $target_file  = upload_file($image);
+        $update_fields[] = "image='$target_file'";
+    }
+
+    if (!empty($update_fields)) {
+        $sql = "UPDATE product SET " . implode(", ", $update_fields) . " WHERE id=$product_id";
+        if (mysqli_query($conn, $sql)) {
+            header("Location: products.php");
+            exit();
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
+    } else {
+        echo "No fields to update";
+    }
 } else {
     die("Invalid request");
 }
@@ -19,88 +62,73 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
 $categories = mysqli_query($conn, "SELECT * FROM categories");
 ?>
 
-<!-- Your HTML Form -->
-<section class="main-content columns is-fullheight">
-    <?php require("sidebar.php"); ?>
-    <div class="container column is-10">
-        <div class="section">
-            <div class="card">
-                <div class="card-header">
-                    <p class="card-header-title">Edit product</p>
-                </div>
-                <div class="card-content">
-                    <form method="post" action="update-product.php" enctype="multipart/form-data"
-                        onsubmit="return validateForm(event)">
-                        <input type="hidden" name="id" value="<?php echo $product['id']; ?>">
-                        <div class="field">
-                            <label class="label">Name</label>
-                            <div class="control">
-                                <input class="input" type="text" name="name" value="<?php echo $product['name']; ?>"
-                                    required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <?php include("header.php"); ?>
+    <div class="d-flex">
+        <?php include("sidebar.php"); ?>
+        <div class="main-content">
+            <div class="container">
+                <h2 class="mb-4">Edit Product</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Edit Product</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?php echo $product['id']; ?>">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $product['name']; ?>">
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Description</label>
-                            <div class="control">
-                                <input class="input" type="text" name="description"
-                                    value="<?php echo $product['description']; ?>" required>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description"><?php echo $product['description']; ?></textarea>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Price</label>
-                            <div class="control">
-                                <input class="input" type="text" name="price" value="<?php echo $product['price']; ?>"
-                                    required>
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" min="1" class="form-control" id="price" name="price" value="<?php echo $product['price']; ?>">
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Stock</label>
-                            <div class="control">
-                                <input class="input" type="number" name="stock"
-                                    value="<?php echo $product['stock']; ?>">
+                            <div class="form-group">
+                                <label for="stock">Stock</label>
+                                <input type="number" class="form-control" min="1" id="stock" name="stock" value="<?php echo $product['stock']; ?>">
                             </div>
-                            <div class="field">
-                                <label class="label">Category</label>
-                                <div class="control">
-                                    <div class="select">
-                                        <select name="category" required>
-                                            <option value="" disabled>Select Category</option>
-                                            <?php
-                                            while ($row = mysqli_fetch_assoc($categories)) {
-                                                $selected = ($row['id'] == $product['category_id']) ? 'selected' : '';
-                                                echo "<option value='{$row['id']}' $selected>{$row['name']}</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <?php while ($row = mysqli_fetch_assoc($categories)) { ?>
+                                        <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $product['category_id']) echo 'selected'; ?>>
+                                            <?php echo $row['name']; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
                             </div>
-                            <div class="field">
-                                <label class="label">Image</label>
-                                <div class="control">
-                                    <input class="input" type="file" name="image">
-                                </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control-file" id="image" name="image">
+                                <img src="<?php echo $product['image']; ?>" height="50" width="50" class="mt-2">
                             </div>
-                            <div class="field">
-                                <div class="control">
-                                    <button class="button is-primary" type="submit">Update product</button>
-                                </div>
-                            </div>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Update Product</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-
-<script>
-    function validateForm(event) {
-        var stock = document.querySelector('input[name="stock"]').value;
-        if (stock <= 0) {
-            alert("Stock must be greater than 0.");
-            event.preventDefault(); // Prevent the form from submitting
-            return false;
-        }
-        return true;
-    }
-</script>
+</body>
+</html>

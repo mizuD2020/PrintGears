@@ -2,7 +2,7 @@
 session_start();
 include 'Sign/dbconnection.php';
 $order_id = $_GET['id'];
-$sql = "SELECT * FROM `order` WHERE id = $order_id";
+$sql = "SELECT * FROM `order` WHERE id=$order_id";
 $result = mysqli_query($connection, $sql);
 $order = mysqli_fetch_assoc($result);
 

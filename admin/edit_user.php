@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $query = "UPDATE user SET fullname='$fullname', username='$username' WHERE id=$id";
     if (mysqli_query($conn, $query)) {
         header("Location: users.php");
+        exit();
     } else {
         echo "Error updating record: " . mysqli_error($conn);
     }
@@ -17,58 +18,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, "SELECT * FROM user WHERE id=$id");
     $user = mysqli_fetch_assoc($result);
 }
-
 ?>
 
-
-<?php
-require("dbconnect.php");
-
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
-    $user_id = $_GET['id'];
-    $query = "SELECT * FROM user WHERE id = $user_id";
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) == 1) {
-        $product = mysqli_fetch_assoc($result);
-    } else {
-        die("User not found");
-    }
-} else {
-    die("Invalid request");
-}
-?>
-<section class="main-content columns is-fullheight">
-    <?php require("sidebar.php"); ?>
-    <div class="container column is-10">
-        <div class="section">
-            <div class="card">
-                <div class="card-header">
-                    <p class="card-header-title">Edit User</p>
-                </div>
-                <div class="card-content">
-                    <form method="post" action="edit_user.php">
-
-                        <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                        <div class="field">
-                            <label for="fullname" class="label">Name</label>
-                            <input type="text" class="input" name="fullname" value="<?php echo $user['fullname']; ?>"
-                                required>
-                        </div>
-                        <div class="field">
-                            <label for="username" class="label">Username</label>
-                            <input type="text" class="input" name="username" value="<?php echo $user['username']; ?>"
-                                required>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button type="submit" class="button is-primary">Update</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <?php include("header.php"); ?>
+    <div class="d-flex">
+        <?php include("sidebar.php"); ?>
+        <div class="main-content">
+            <div class="container">
+                <h2 class="mb-4">Edit User</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Edit User</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" class="form-control" id="fullname" name="fullname" value="<?php echo $user['fullname']; ?>" required>
                             </div>
-                        </div>
-
-                    </form>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update User</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</body>
+</html>

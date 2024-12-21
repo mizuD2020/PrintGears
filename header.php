@@ -1,31 +1,16 @@
 <?php
-
-include("./Sign/dbconnection.php");
-
-// Initialize variables
+include_once "./Sign/dbconnection.php";
 $search_query = "";
 $cart_count = 0;
-
-// Check if user is logged in
 if (isset($_SESSION['user'])) {
-    // Retrieve user's cart count
     $cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
     if (isset($cart)) {
         $cart_items = mysqli_query($connection, "SELECT * FROM cart_item WHERE cart_id = '{$cart['id']}'");
         $cart_count = mysqli_num_rows($cart_items);
     }
 }
-
-// Handle search form submission
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
-    $search_query = $_GET['search_query'];
-    header("Location: index.php?category=" . urlencode($search_query));
-    exit();
-}
 ?>
-
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -149,3 +134,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
 </body>
 
 </html>
+
+<?php 
+
+// Handle search form submission
+if (isset($_GET['search'])) {
+    $search_query = $_GET['search_query'];
+    header("Location: index.php?category=" . urlencode($search_query));
+    exit();
+}
+?>

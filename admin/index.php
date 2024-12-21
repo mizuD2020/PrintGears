@@ -1,170 +1,104 @@
-<section class="main-content columns is-fullheight">
-    <?php
+<?php 
     session_start();
-
-    require("sidebar.php");
-    require("dbconnect.php");
-    if (!isset($_SESSION['user']) && $_SESSION['Role_as'] !== 1) {
-
-        header("Location: ../Sign/SignIn.php"); // Redirect to login page if not logged in or not an admin
+    if (!isset($_SESSION['user']) && !isset($_SESSION['Role_as']) &&  $_SESSION['Role_as'] !== 1) {
+        header("Location: ../Sign/SignIn.php");
         exit();
     }
-
-    // Correct queries to count rows in product and user tables
-    $products_query = mysqli_query($conn, "SELECT COUNT(*) FROM product");
-    $products_result = mysqli_fetch_row($products_query);
-    $products_count = $products_result[0];
-
-    $users_query = mysqli_query($conn, "SELECT COUNT(*) FROM user");
-    $users_result = mysqli_fetch_row($users_query);
-    $users_count = $users_result[0];
-
-    // Correct the query for counting orders
-    $orders_query = mysqli_query($conn, "SELECT COUNT(*) FROM `order`");
-    $orders_result = mysqli_fetch_row($orders_query);
-    $orders_count = $orders_result[0];
-    ?>
+    require("dbconnect.php");
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General container styling */
-        .container {
-            margin: 20px auto;
-            max-width: 1200px;
-            padding: 15px;
-            background-color: white;
-        }
-
-        /* Section styling */
-        .section {
+        .main-content {
+            margin-left: 250px;
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-        /* Card styling */
-        .card {
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+        .dashboard-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
-
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
         .card-header {
-            background-color: rgb(135, 170, 207);
-            color: #ffffff;
-            padding: 10px 15px;
-            font-size: 1.2rem;
+            background-color: #fff;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+        .card-header i {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        .card-value {
+            font-size: 2rem;
             font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin: 10px 0;
         }
-
-        .card-header p {
-            margin: 0;
-        }
-
-        .card-content {
-            padding: 15px;
+        .card-label {
+            color: #6c757d;
             font-size: 1rem;
-            color: #333;
-            text-align: center;
+            margin-bottom: 0;
         }
-
-        /* Columns styling */
-        .columns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .column {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        /* Button styling */
-        button.nav-item a {
-            text-decoration: none;
-            color: #fff;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        button.nav-item a:hover {
-            background-color: #C82333;
-        }
-
-        /* Utility classes */
-        .is-danger {
-            background-color: #DC3545;
-            border: none;
-            cursor: pointer;
-        }
-
-        .is-hidden1 {
-            display: block;
-            /* Adjust based on visibility logic */
-        }
-
-        /* Responsive styling */
-        @media (max-width: 768px) {
-            .columns {
-                flex-direction: column;
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            button.nav-item a {
-                width: 100%;
-                text-align: center;
-            }
-        }
+        .products-card { border-left: 4px solid #17a2b8; }
+        .users-card { border-left: 4px solid #28a745; }
+        .orders-card { border-left: 4px solid #ffc107; }
     </style>
-    <div class="container column is-10">
-        <div class="section">
-            <div class="card is-hidden1">
-                <div class="card-header">
-                    <p class="card-header-title">Dashboard</p>
-                    <button class="nav-item">
-                        <a href="logout.php" class="button is-danger"><i
-                                class="bi bi-box-arrow-right"></i>&nbsp;Logout</a>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="columns">
-                        <div class="column">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Products</p>
-                                </div>
-                                <div class="card-content">
-                                    <?php echo $products_count; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Users</p>
-                                </div>
-                                <div class="card-content">
-                                    <?php echo $users_count; ?>
+</head>
+<body>
+    <div class="d-flex">
+        <?php include("sidebar.php"); ?>
+        <div class="main-content">
+            <div class="container-fluid">
+                <h2 class="mb-4">Dashboard Overview</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card dashboard-card products-card mb-4">
+                            <div class="card-header d-flex align-items-center">
+                                <i class="fas fa-box text-info"></i>
+                                <div>
+                                    <?php
+                                    $products_query = mysqli_query($conn, "SELECT COUNT(*) FROM product");
+                                    $products_count = mysqli_fetch_row($products_query)[0];
+                                    ?>
+                                    <div class="card-value"><?php echo number_format($products_count); ?></div>
+                                    <p class="card-label">Total Products</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="column">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Orders</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card users-card mb-4">
+                            <div class="card-header d-flex align-items-center">
+                                <i class="fas fa-users text-success"></i>
+                                <div>
+                                    <?php
+                                    $users_query = mysqli_query($conn, "SELECT COUNT(*) FROM user");
+                                    $users_count = mysqli_fetch_row($users_query)[0];
+                                    ?>
+                                    <div class="card-value"><?php echo number_format($users_count); ?></div>
+                                    <p class="card-label">Total Users</p>
                                 </div>
-                                <div class="card-content">
-                                    <?php echo $orders_count; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card orders-card mb-4">
+                            <div class="card-header d-flex align-items-center">
+                                <i class="fas fa-shopping-cart text-warning"></i>
+                                <div>
+                                    <?php
+                                    $orders_query = mysqli_query($conn, "SELECT COUNT(*) FROM `order`");
+                                    $orders_count = mysqli_fetch_row($orders_query)[0];
+                                    ?>
+                                    <div class="card-value"><?php echo number_format($orders_count); ?></div>
+                                    <p class="card-label">Total Orders</p>
                                 </div>
                             </div>
                         </div>
@@ -173,4 +107,9 @@
             </div>
         </div>
     </div>
-</section>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

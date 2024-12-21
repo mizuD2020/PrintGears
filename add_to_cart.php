@@ -11,7 +11,7 @@ if (!isset($_SESSION['user'])) {
 
 $product_id = $_GET['product_id'];
 $quantity = 1;
-if ($_GET['quantity']) {
+if (isset($_GET['quantity'])) {
     $quantity = $_GET['quantity'];
 }
 
@@ -34,7 +34,7 @@ if ($product['stock'] <= 0) {
         $cart_id = $existing_cart['id'];
 
         // Check if the product is already in the cart
-        $check_item_query = "SELECT * FROM cart_item WHERE cart_id = '$cart_id' AND product_id = '$product_id'";
+        $check_item_query = "SELECT * FROM cart_item WHERE cart_id = $cart_id AND product_id = '$product_id'";
         $check_item_result = mysqli_query($connection, $check_item_query);
         $existing_item = mysqli_fetch_assoc($check_item_result);
 

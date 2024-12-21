@@ -1,213 +1,62 @@
-<section class="main-content columns is-fullheight">
-    <?php
-    require("sidebar.php");
-    require("dbconnect.php");
-    $result = mysqli_query($conn, "SELECT * FROM user");
-    ?>
+<?php
+session_start();
+if (!isset($_SESSION['user']) && !isset($_SESSION['Role_as']) &&  $_SESSION['Role_as'] !== 1) {
+    header("Location: ../Sign/SignIn.php");
+    exit();
+}
+require("dbconnect.php");
+$result = mysqli_query($conn, "SELECT * FROM user");
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General Page Styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        /* Container Styling */
-        .container {
-            margin: 20px auto;
-            max-width: 1200px;
-            padding: 15px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Section Styling */
-        .section {
+            margin-left: 250px;
             padding: 20px;
+            min-height: 100vh;
         }
-
-        /* Card Styling */
-        .card {
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: rgb(135, 170, 207);
-            color: #ffffff;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .card-header-title {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .card-content {
-            padding: 15px;
-        }
-
-        /* Table Styling */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 1rem;
-        }
-
-
-        .table th {
-            background-color: black;
-            text-align: left;
-            padding: 10px;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .table td {
-            background-color: rgb(255, 255, 255);
-            color: black;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .table.is-striped tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table.is-hoverable tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Button Styling */
-        .button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button.is-primary {
-            background-color: rgb(69, 129, 0);
-            color: #ffffff;
-        }
-
-        .button.is-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .button.is-danger {
-            background-color: rgb(255, 15, 39);
-            color: #ffffff;
-        }
-
-        .button.is-danger:hover {
-            background-color: #a71d2a;
-        }
-
-        .button.is-small {
-            font-size: 0.8rem;
-            padding: 5px 10px;
-        }
-
-        /* Image Styling */
-        table td img {
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .table thead {
-                display: none;
-            }
-
-            .table tr {
-                display: block;
-                margin-bottom: 15px;
-            }
-
-            .table td {
-                display: block;
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-            }
-
-            .table td:before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 45%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-            }
-
-            .buttons {
-                justify-content: flex-end;
-            }
     </style>
-
-    <div class="container column is-10">
-        <div class="section">
-            <div class="card is-hidden1">
-                <div class="card-header">
-                    <p class="card-header-title">Users</p>
-                    <a href="create_user.php" class="button is-primary">Create User</a>
-                </div>
-                <div class="card-content">
-                    <table class="table is-fullwidth is-striped is-hoverable">
-                        <thead>
+</head>
+<body>
+    <?php include("header.php"); ?>
+    <div class="d-flex">
+        <?php include("sidebar.php"); ?>
+        <div class="main-content">
+            <div class="container-fluid">
+                <h2 class="mb-4">User Management</h2>
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($user = mysqli_fetch_assoc($result)) { ?>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Username</th>
-                                <th></th>
+                                <td><?php echo $user['id']; ?></td>
+                                <td><?php echo $user['username']; ?></td>
+                                <td><?php echo $user['email']; ?></td>
+                                <td><?php echo $user['Role_as'] == 1 ? "Admin" : "User" ?></td>
+                                <td>
+                                    <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
+                                    <a href="../delete.php?id=<?php echo $user['id']; ?>&table=user" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure ?');">Delete</a>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            while ($user = mysqli_fetch_assoc($result)) {
-                                $delete_url = '../delete.php?table=user&id=' . $user['id'];
-                                $edit_url = 'edit_user.php?id=' . $user['id'];
-                                ?>
-
-                                <tr>
-                                    <td><?php echo $user['id']; ?></td>
-                                    <td><?php echo $user['fullname']; ?></td>
-                                    <td><?php echo $user['username']; ?></td>
-                                    <td class="is-actions-cell">
-                                        <div class="buttons is-right">
-                                            <a href="<?php echo $edit_url; ?>" class="button is-small is-primary">Edit</a>
-                                            <a href="<?php echo $delete_url; ?>" class="button is-small is-danger jb-modal"
-                                                onclick="return confirm('You want to delete it?')"
-                                                data-target="sample-modal" type="button">Delete</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</section>
+</body>
+</html>

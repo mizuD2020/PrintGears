@@ -44,7 +44,7 @@ if (isset($_POST['update'])) {
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
                     <input type="number" class="form-control" id="quantity" name="quantity"
-                        value="<?php echo $cart_item['quantity'] ?>" data-stock="<?php echo $stock; ?>" required>
+                        value="<?php echo $cart_item['quantity'] ?>" min="1" max="<?php echo $stock;?>" data-stock="<?php echo $stock; ?>" required>
                 </div>
                 <button type="submit" class="btn btn-primary" name="update">Update</button>
             </form>

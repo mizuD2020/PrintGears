@@ -1,221 +1,80 @@
-<section class="main-content columns is-fullheight">
-    <?php
-    require("sidebar.php");
-    require("dbconnect.php");
-    $result = mysqli_query($conn, "SELECT * FROM order");
-    $result = mysqli_query($conn, "SELECT * FROM order_item");
-    ?>
+<?php
+session_start();
+require("dbconnect.php");
+if (!isset($_SESSION['user']) && !isset($_SESSION['Role_as']) &&  $_SESSION['Role_as'] !== 1) {
+    header("Location: ../Sign/SignIn.php");
+    exit();
+}
+if (isset($_POST['mark_delivered'])) {
+    $order_id = $_POST['order_id'];
+    $query = "UPDATE `order` SET order_status='Delivered' WHERE id=$order_id";
+    if (mysqli_query($conn, $query)) {
+        header("Location: orders.php");
+        exit();
+    } else {
+        die("Error updating record: " . mysqli_error($conn));
+    }
+}
+$result = mysqli_query($conn, "SELECT user.fullname, `order`.* FROM `order` join user on `order`.user_id = user.id");
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General Page Styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        /* Container Styling */
-        .container {
-            margin: 20px auto;
-            max-width: 1200px;
-            padding: 15px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Section Styling */
-        .section {
+            margin-left: 250px;
             padding: 20px;
+            min-height: 100vh;
         }
-
-        /* Card Styling */
-        .card {
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: rgb(135, 170, 207);
-            color: #ffffff;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .card-header-title {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .card-content {
-            padding: 15px;
-        }
-
-        /* Table Styling */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 1rem;
-        }
-
-
-        .table th {
-            background-color: black;
-            text-align: left;
-            padding: 10px;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .table td {
-            background-color: rgb(255, 255, 255);
-            color: black;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .table.is-striped tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table.is-hoverable tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Button Styling */
-        .button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button.is-primary {
-            background-color: rgb(69, 129, 0);
-            color: #ffffff;
-        }
-
-        .button.is-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .button.is-danger {
-            background-color: rgb(255, 15, 39);
-            color: #ffffff;
-        }
-
-        .button.is-danger:hover {
-            background-color: #a71d2a;
-        }
-
-        .button.is-small {
-            font-size: 0.8rem;
-            padding: 5px 10px;
-        }
-
-        /* Image Styling */
-        table td img {
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .table thead {
-                display: none;
-            }
-
-            .table tr {
-                display: block;
-                margin-bottom: 15px;
-            }
-
-            .table td {
-                display: block;
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-            }
-
-            .table td:before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 45%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-            }
-
-            .buttons {
-                justify-content: flex-end;
-            }
     </style>
-
-    <div class="container column is-10">
-        <div class="section">
-            <div class="card is-hidden1">
-                <div class="card-header">
-                    <p class="card-header-title">products</p>
-                    <a href="add_item.php" class="button is-primary">Add products</a>
-                </div>
-                <div class="card-content">
-                    <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
-                        <thead>
+</head>
+<body>
+    <?php include("header.php"); ?>
+    <div class="d-flex">
+        <?php include("sidebar.php"); ?>
+        <div class="main-content">
+            <div class="container-fluid">
+                <h2 class="mb-4">Order Management</h2>
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($order = mysqli_fetch_assoc($result)) { ?>
                             <tr>
-                                <th>User</th>
-                                <th>product Name</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                                <th>Image</th>
-                                <th></th>
+                                <td><?php echo $order['id']; ?></td>
+                                <td><?php echo $order['total']; ?></td>
+                                <td><?php echo $order['fullname']; ?></td>
+                                <td><?php echo $order['order_date']; ?></td>
+                                <td><?php echo $order['order_status']; ?></td>
+                                <td><?php echo $order['payment_method']; ?></td>
+                                <td>
+                                <?php if ($order['order_status'] != 'delivered') { ?>
+                                        <form method="post" style="display:inline;">
+                                            <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                                            <button type="submit" name="mark_delivered" class="btn btn-sm btn-success">Mark as Delivered</button>
+                                        </form>
+                                    <?php } ?>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            while ($product = mysqli_fetch_assoc($result)) {
-                                $delete_url = '../delete.php?table=product&id=' . $product['id'];
-                                ?>
-                                <tr>
-                                    <td data-label="Name"><?php echo $product['name']; ?></td>
-                                    <td data-label="Desciption"><?php echo $product['description']; ?></td>
-                                    <td data-label="Price"><?php echo $product['price']; ?></td>
-                                    <td data-label="Stock"><?php echo $product['quantity']; ?></td>
-                                    <td data-label="Image"><img src="<?php echo $product['image']; ?>" height="30"
-                                            width="30"></td>
-                                    <td class="is-actions-cell">
-                                        <div class="buttons is-right">
-                                            <button class="button is-small is-primary" type="button">
-                                                Edit
-                                            </button>
-                                            <a href="<?php echo $delete_url ?>" class="button is-small is-danger jb-modal"
-                                                data-target="sample-modal" type="button">
-                                                Delete
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
-</section>
+</body>
+</html>

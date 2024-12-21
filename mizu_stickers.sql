@@ -92,3 +92,15 @@ CREATE TABLE `order_history` (
   `order_date` datetime NOT NULL,
   `expected_delivery_date` datetime NOT NULL
 )
+
+ALTER TABLE `cart_item`
+CHANGE COLUMN `sticker_id` `product_id` int(11) NOT NULL default 1;
+
+ALTER TABLE `order_history`
+CHANGE COLUMN `sticker_id` `product_id` int(11) NOT NULL default 1;
+
+ALTER TABLE `order_item`
+CHANGE COLUMN `sticker_id` `product_id` int(11) NOT NULL default 1;
+
+ALTER TABLE `order` 
+MODIFY COLUMN `order_status` enum('pending','cancelled','paid','delivered') DEFAULT 'pending';
