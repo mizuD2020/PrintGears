@@ -3,7 +3,7 @@ include 'dbconnect.php';
 
 $user_id = $_GET['user_id'];
 
-$history = mysqli_query($conn, "SELECT sticker.name, sticker.image, sticker.price, order_history.quantity, order_history.order_date, order_history.expected_delivery_date FROM order_history JOIN sticker ON sticker.id = order_history.sticker_id WHERE order_history.user_id = $user_id ORDER BY order_history.order_date DESC");
+$history = mysqli_query($conn, "SELECT product.name, product.image, product.price, order_history.quantity, order_history.order_date, order_history.expected_delivery_date FROM order_history JOIN product ON product.id = order_history.product_id WHERE order_history.user_id = $user_id ORDER BY order_history.order_date DESC");
 
 if (mysqli_num_rows($history) == 0) {
     die('<div class="alert alert-warning">This user has no order history.</div>');

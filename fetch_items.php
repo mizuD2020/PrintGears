@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "mizu_stickers";
+$database = "PrintGears";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);

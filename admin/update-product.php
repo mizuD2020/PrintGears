@@ -1,10 +1,10 @@
 <?php
 session_start();
-require ("dbconnect.php");
-require ("../upload.php");
+require("dbconnect.php");
+require("../upload.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
-    $sticker_id = $_POST['id'];
+    $product_id = $_POST['id'];
     $name = $_POST['name'];
     $description = $_POST['description'];
     $price = $_POST['price'];
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     if ($stock <= 0) {
         die('<div class="alert alert-danger">Stock must be greater than 0.</div>');
     }
-    $sql = "UPDATE sticker SET name = ?, description = ?, price = ?, stock = ?, image = ?, category_id = ? WHERE id = ?";
+    $sql = "UPDATE product SET name = ?, description = ?, price = ?, stock = ?, image = ?, category_id = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -37,11 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         exit();
     }
 
-    $stmt->bind_param("ssiissi", $name, $description, $price, $stock, $uploaded_file, $category, $sticker_id);
+    $stmt->bind_param("ssiissi", $name, $description, $price, $stock, $uploaded_file, $category, $product_id);
 
     if ($stmt->execute()) {
         // Set success message
-        $_SESSION['success_message'] = "Sticker updated successfully";
+        $_SESSION['success_message'] = "product updated successfully";
     } else {
         $_SESSION['error_message'] = "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
 // Close the database connection
 $conn->close();
 
-// Redirect to stickers.php
+// Redirect to products.php
 header("Location: stickkers.php");
 exit();
 ?>

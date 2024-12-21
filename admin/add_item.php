@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error occurred while uploading file");
     }
 
-    $sql = "INSERT INTO sticker (name, description, price, stock, image, category_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO product (name, description, price, stock, image, category_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssiiss", $name, $description, $price, $stock, $uploaded_file, $category);
 
     if ($stmt->execute()) {
-        echo "Sticker added successfully";
+        echo "product added successfully";
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -53,14 +53,14 @@ $conn->close();
         <div class="section">
             <div class="card">
                 <div class="card-header">
-                    <p class="card-header-title">Add Sticker</p>
+                    <p class="card-header-title">Add product</p>
                 </div>
                 <div class="card-content">
                     <form method="post" enctype="multipart/form-data" onsubmit="return validateForm(event)">
                         <div class="field">
                             <label class="label">Name</label>
                             <div class="control">
-                                <input class="input" type="text" name="name" placeholder="Sticker Name" required>
+                                <input class="input" type="text" name="name" placeholder="product Name" required>
                             </div>
                         </div>
                         <div class="field">
@@ -104,7 +104,7 @@ $conn->close();
                         </div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" type="submit">Add Sticker</button>
+                                <button class="button is-primary" type="submit">Add product</button>
                             </div>
                         </div>
                     </form>

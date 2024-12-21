@@ -24,7 +24,7 @@ $users_query = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM 
 
 <body class="bg-dark">
     <section class="main-content columns is-fullheight">
-        <?php require ("sidebar.php"); ?>
+        <?php require("sidebar.php"); ?>
         <div class="container column is-10">
             <div class="section">
                 <div class="card">
@@ -34,17 +34,17 @@ $users_query = mysqli_query($conn, "SELECT DISTINCT user.id, user.username FROM 
                     <div class="card-content">
                         <div class="list-group">
                             <?php while ($user = mysqli_fetch_assoc($users_query)) {
-                                // Fetch total amount and grand total price of stickers purchased by the user
-                                $total_query = mysqli_query($conn, "SELECT SUM(order_history.quantity) AS total_amount, SUM(order_history.quantity * sticker.price) AS total_price 
+                                // Fetch total amount and grand total price of products purchased by the user
+                                $total_query = mysqli_query($conn, "SELECT SUM(order_history.quantity) AS total_amount, SUM(order_history.quantity * product.price) AS total_price 
                                                                     FROM order_history 
-                                                                    JOIN sticker ON sticker.id = order_history.sticker_id 
+                                                                    JOIN product ON product.id = order_history.product_id 
                                                                     WHERE order_history.user_id = {$user['id']}");
                                 $total_result = mysqli_fetch_assoc($total_query);
                                 ?>
                                 <a href="#" class="list-group-item list-group-item-action"
                                     onclick="toggleOrderDetails(<?php echo $user['id']; ?>)">
                                     <?php echo $user['username']; ?>
-                                    <span class="badge badge-primary badge-pill float-right">Total Stickers:
+                                    <span class="badge badge-primary badge-pill float-right">Total products:
                                         <?php echo $total_result['total_amount']; ?></span>
                                     <span class="badge badge-secondary badge-pill float-right mr-2">Total Price: Rs
                                         <?php echo $total_result['total_price']; ?></span>

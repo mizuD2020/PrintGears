@@ -3,7 +3,7 @@ $id = $_GET['id'];
 $table = $_GET['table'];
 
 // Validate table name
-$allowed_tables = ['table1', 'table2', 'sticker']; // Add all valid table names here
+$allowed_tables = ['table1', 'table2', 'product']; // Add all valid table names here
 if (!in_array($table, $allowed_tables)) {
     die('Invalid table name');
 }

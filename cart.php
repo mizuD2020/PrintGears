@@ -3,15 +3,16 @@ ob_start();
 session_start();
 include "header.php";
 
+
 $cart = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM cart WHERE user_id = '{$_SESSION['user']['id']}'"));
 if (!isset($cart['id'])) {
     die('<p>Your cart is empty.</p>');
 }
 
 $result = mysqli_query($connection, "
-SELECT sticker.name, sticker.image, sticker.price, cart_item.quantity,cart_item.id , sticker.stock
+SELECT product.name, product.image, product.price, cart_item.quantity,cart_item.id , product.stock
 FROM cart_item
-JOIN sticker ON sticker.id = cart_item.sticker_id
+JOIN product ON product.id = cart_item.product_id
 WHERE cart_item.cart_id = {$cart['id']}
 ");
 
@@ -67,15 +68,16 @@ WHERE cart_item.cart_id = {$cart['id']}
                     if (isset($_POST['checkout'])) {
                         $order = mysqli_query($connection, "INSERT INTO `order` (user_id, total) VALUES ('{$_SESSION['user']['id']}', '$total')");
                         $order_id = mysqli_insert_id($connection);
-                        $cart_item_result = mysqli_query($connection, "SELECT cart_item.*, sticker.stock FROM cart_item join sticker on sticker.id = cart_item.sticker_id WHERE cart_id = {$cart['id']} ");
+                        $cart_item_result = mysqli_query($connection, "SELECT cart_item.*, product.stock FROM cart_item join product on product.id = cart_item.product_id WHERE cart_id = {$cart['id']} ");
 
                         while ($cart_item = mysqli_fetch_assoc($cart_item_result)) {
                             $new_stock = $cart_item['stock'] - $cart_item['quantity'];
-                            mysqli_query($connection, "UPDATE sticker SET stock=$new_stock WHERE id = '{$cart_item['sticker_id']}'");
-                            mysqli_query($connection, "INSERT INTO order_item (order_id, sticker_id, quantity) VALUES ('$order_id', '{$cart_item['sticker_id']}', '{$cart_item['quantity']}')");
+                            mysqli_query($connection, "UPDATE product SET stock=$new_stock WHERE id = '{$cart_item['product_id']}'");
+                            mysqli_query($connection, "INSERT INTO order_item (order_id, product_id, quantity) VALUES ('$order_id', '{$cart_item['product_id']}', '{$cart_item['quantity']}')");
                         }
                         mysqli_query($connection, "DELETE FROM cart_item WHERE cart_id = {$cart['id']}");
                         header("Location: orders.php");
+                        header("Location: payment-method.php?order_id=$order_id");
                         exit();
                     } ?>
                 </tbody>

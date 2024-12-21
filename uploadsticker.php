@@ -27,10 +27,10 @@ if (isset($_POST['submit'])) {
     if (!$url) {
         die("Error occured while uploading file");
     }
-    $sql = "INSERT INTO sticker (name, description, category_id, image, price, stock, is_requested) VALUES ('$name', '$description', '$category', '$url', $price, '$quantity', true)";
+    $sql = "INSERT INTO product (name, description, category_id, image, price, stock, is_requested) VALUES ('$name', '$description', '$category', '$url', $price, '$quantity', true)";
     mysqli_query($connection, $sql);
-    $sticker_id = mysqli_insert_id($connection);
-    header("Location: add_to_cart.php?sticker_id=$sticker_id&quantity=$quantity");
+    $product_id = mysqli_insert_id($connection);
+    header("Location: add_to_cart.php?product_id=$product_id&quantity=$quantity");
 
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-require ("dbconnect.php");
+require("dbconnect.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 <?php
-require ("dbconnect.php");
+require("dbconnect.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $user_id = $_GET['id'];
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) == 1) {
-        $sticker = mysqli_fetch_assoc($result);
+        $product = mysqli_fetch_assoc($result);
     } else {
         die("User not found");
     }
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
 }
 ?>
 <section class="main-content columns is-fullheight">
-    <?php require ("sidebar.php"); ?>
+    <?php require("sidebar.php"); ?>
     <div class="container column is-10">
         <div class="section">
             <div class="card">

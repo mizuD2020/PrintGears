@@ -1,10 +1,63 @@
 <?php include "header.php" ?>
 <style>
-    .menu-list li {
-        margin-bottom: 10px;
+    <style>.menu-list {
+        list-style: none;
+        padding: 0;
+    }
 
+    .menu-list li {
+        margin-bottom: 15px;
+    }
+
+    .menu-list a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .menu-list a:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .menu-list svg {
+        flex-shrink: 0;
+        margin-right: 10px;
+    }
+
+    aside {
+        background-color: #f9f9f9;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        height: 100vh;
+        position: fixed;
+        width: 250px;
+        overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+        aside {
+            position: relative;
+            height: auto;
+            box-shadow: none;
+            width: 100%;
+        }
+
+        .menu-list li {
+            margin-bottom: 10px;
+        }
+
+        .menu-list a {
+            padding: 8px;
+        }
     }
 </style>
+
 <aside class="column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
     <ul class="menu-list">
         <li>
@@ -24,7 +77,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                 </svg>
-                &nbsp;Stickers
+                &nbsp;Products
             </a>
 
         </li>

@@ -5,10 +5,13 @@ require_once 'dbconnection.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
+    // Validate passwords
     if ($password !== $confirmPassword) {
         $_SESSION['message'] = 'Passwords do not match!';
         $_SESSION['message_type'] = 'warning';
@@ -29,10 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
+    // Validate phone number (must be exactly 10 digits)
+    if (!preg_match('/^[0-9]{10}$/', $phone)) {
+        $_SESSION['message'] = 'Invalid phone number!';
+        $_SESSION['message_type'] = 'warning';
+        header('Location: signUpPage.php');
+        exit();
+    }
+
     // Insert new user
-    $stmt = $connection->prepare("INSERT INTO user (fullname, email, username, password) VALUES (?, ?, ?, ?)");
+    $stmt = $connection->prepare(
+        "INSERT INTO user (fullname, email, phone, address, username, password) VALUES (?, ?, ?, ?, ?, ?)"
+    );
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    $stmt->bind_param("ssss", $fullname, $email, $username, $hashedPassword);
+    $stmt->bind_param("ssssss", $fullname, $email, $phone, $address, $username, $hashedPassword);
 
     if ($stmt->execute()) {
         $_SESSION['message'] = 'SignUp successful!';

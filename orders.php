@@ -5,10 +5,10 @@ include "header.php";
 $user_id = $_SESSION['user']['id'];
 
 // Fetch orders
-$orders = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_item.quantity, `order`.order_date FROM order_item JOIN sticker ON sticker.id = order_item.sticker_id JOIN `order` ON `order`.id = order_item.order_id WHERE `order`.user_id = $user_id");
+$orders = mysqli_query($connection, "SELECT product.name, product.image, product.price, order_item.quantity, `order`.order_date FROM order_item JOIN product ON product.id = order_item.product_id JOIN `order` ON `order`.id = order_item.order_id WHERE `order`.user_id = $user_id");
+$orders = mysqli_query($connection, "SELECT product.name, product.image, product.price, order_item.quantity, `order`.order_status, `order`.order_date FROM order_item JOIN product ON product.id = order_item.product_id JOIN `order` ON `order`.id = order_item.order_id WHERE `order`.user_id = $user_id");
 
 $order_items = mysqli_fetch_all($orders, MYSQLI_ASSOC);
-
 $grand_total = 0;
 ?>
 <!DOCTYPE html>
@@ -39,6 +39,7 @@ $grand_total = 0;
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Total</th>
                     </tr>
@@ -53,6 +54,7 @@ $grand_total = 0;
                                     alt="<?php echo $item['name'] ?>"></td>
                             <td><?php echo $item['name'] ?></td>
                             <td>Rs <?php echo $item['price'] ?></td>
+                            <td><?php echo $item['order_status'] ?></td>
                             <td><?php echo $item['quantity'] ?></td>
                             <td>Rs <?php echo $total_price ?></td>
                         </tr>

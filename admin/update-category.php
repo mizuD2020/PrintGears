@@ -1,7 +1,7 @@
 <?php
 session_start();
-require ("dbconnect.php");
-require ("../upload.php");
+require("dbconnect.php");
+require("../upload.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     $category_id = $_POST['id'];
@@ -44,10 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     $_SESSION['error_message'] = "Invalid request";
 }
 
-// Close the database connection
+
 $conn->close();
 
-// Redirect to stickers.php
+
 header("Location: categories.php");
 exit();
 ?>

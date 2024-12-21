@@ -5,7 +5,7 @@ include "header.php";
 $user_id = $_SESSION['user']['id'];
 
 // Fetch order history
-$order_history = mysqli_query($connection, "SELECT sticker.name, sticker.image, sticker.price, order_history.quantity, order_history.order_date, order_history.expected_delivery_date FROM order_history JOIN sticker ON sticker.id = order_history.sticker_id WHERE order_history.user_id = $user_id");
+$order_history = mysqli_query($connection, "SELECT product.name, product.image, product.price, order_history.quantity, order_history.order_date, order_history.expected_delivery_date FROM order_history JOIN product ON product.id = order_history.product_id WHERE order_history.user_id = $user_id");
 
 $history_items = mysqli_fetch_all($order_history, MYSQLI_ASSOC);
 ?>

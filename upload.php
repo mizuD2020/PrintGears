@@ -9,7 +9,7 @@ function upload_file($file)
     $file_destination = __DIR__ . '/uploads/' . $file_name_new;
 
     if (move_uploaded_file($file_tmp, $file_destination)) {
-        return 'http://'.$_SERVER['HTTP_HOST'] . '/mizustickers'. '/uploads/' . $file_name_new;
+        return 'http://' . $_SERVER['HTTP_HOST'] . '/PrintGears' . '/uploads/' . $file_name_new;
     }
     return false;
 }

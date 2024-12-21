@@ -5,7 +5,7 @@ include 'header.php';
 // Initialize variables
 $search_query = isset($_GET['category']) ? $_GET['category'] : ''; // Retrieve category search query
 $result = mysqli_query($connection, "SELECT * FROM categories");
-$stickers = [];
+$products = [];
 
 // Handle category search
 if (!empty($search_query)) {
@@ -17,28 +17,28 @@ if (!empty($search_query)) {
         $category_ids[] = $row['id'];
     }
 
-    // Fetch stickers with matching category IDs and stock greater than 0
+    // Fetch products with matching category IDs and stock greater than 0
     if (!empty($category_ids)) {
         $category_ids_str = implode(",", $category_ids);
-        $sticker_query = "SELECT * FROM sticker WHERE category_id IN ($category_ids_str) AND stock > 0 AND is_requested = false";
-        $sticker_query .= " ORDER BY FIELD(category_id, $category_ids_str) DESC";
-        $stickers_result = mysqli_query($connection, $sticker_query);
+        $product_query = "SELECT * FROM product WHERE category_id IN ($category_ids_str) AND stock > 0 AND is_requested = false";
+        $product_query .= " ORDER BY FIELD(category_id, $category_ids_str) DESC";
+        $products_result = mysqli_query($connection, $product_query);
         $heading_text = $search_query;
-        while ($row = mysqli_fetch_assoc($stickers_result)) {
-            $stickers[] = $row;
+        while ($row = mysqli_fetch_assoc($products_result)) {
+            $products[] = $row;
         }
     } else {
-        $heading_text = "Recently Added";
+        $heading_text = "Prime selections";
     }
 } else {
-    $heading_text = "Recently Added";
+    $heading_text = "Prime selections";
 }
 
-// If no specific category search, fetch all stickers with stock greater than 0
-if (empty($stickers)) {
-    $stickers_result = mysqli_query($connection, "SELECT * FROM sticker WHERE stock > 0 AND is_requested = false");
-    while ($row = mysqli_fetch_assoc($stickers_result)) {
-        $stickers[] = $row;
+// If no specific category search, fetch all products with stock greater than 0
+if (empty($products)) {
+    $products_result = mysqli_query($connection, "SELECT * FROM product WHERE stock > 0 AND is_requested = false");
+    while ($row = mysqli_fetch_assoc($products_result)) {
+        $products[] = $row;
     }
 }
 ?>
@@ -49,8 +49,7 @@ if (empty($stickers)) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sticker Shop</title>
-    <!-- Add your CSS and other header elements here -->
+    <title>PrintGears</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -62,7 +61,7 @@ if (empty($stickers)) {
             <?php if (isset($_SESSION['message'])) { ?>
                 Swal.fire({
                     title: '<?php echo $_SESSION['message']; ?>',
-                    icon: '<?php echo $_SESSION['message'] == "Sticker added to cart!" ? "success" : "warning"; ?>'
+                    icon: '<?php echo $_SESSION['message'] == "product added to cart!" ? "success" : "warning"; ?>'
                 });
                 <?php unset($_SESSION['message']); ?>
             <?php } ?>
@@ -78,42 +77,45 @@ if (empty($stickers)) {
             });
         });
     </script>
+
     <style>
         body {
-            background-color: black;
+            background-color: blanchedalmond;
             margin: 0;
             padding: 0;
+            font-family: 'Arial', sans-serif;
         }
 
         body::-webkit-scrollbar {
             display: none;
         }
 
-
         h1 {
-            color: white;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: black;
+            font-family: cursive;
             font-weight: bolder;
             font-size: 40px;
             margin-top: 10px;
             margin-bottom: 10px;
+            text-align: calc(100vm-280px);
         }
 
         .container {
-
             display: flex;
             justify-content: space-between;
         }
 
-
         .category-section {
             width: 280px;
             margin-left: auto;
-            /* Push category section to the right */
             margin-right: 20px;
-            right: 0;
             position: fixed;
-            /* 20px margin between category and stickers */
+            margin-top: 10px;
+            right: 0;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .category-card {
@@ -134,6 +136,7 @@ if (empty($stickers)) {
             max-width: 80px;
             max-height: 80px;
             margin-right: 10px;
+            border-radius: 8px;
         }
 
         .category-card span {
@@ -141,48 +144,17 @@ if (empty($stickers)) {
             font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .sticky-category {
-            width: 280px;
-            position: sticky;
-            position: right;
-            top: 20px;
-            z-index: 1000;
+        .product-section {
+            width: calc(100% - 320px);
+            /* Accounts for category width and margin */
+            margin-left: 320px;
+            padding: 20px;
         }
 
-        .scrollable-categories {
-            max-height: calc(100vh - 50px);
-            overflow: scroll;
-            padding-right: 5px;
-        }
-
-        .scrollable-categories::-webkit-scrollbar {
-            width: 10px;
-            background-color: gray;
-            border-radius: 5px;
-        }
-
-        .scrollable-categories .list-group-item {
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 2px;
-            transition: background-color 0.3s ease;
-            margin-bottom: 10px;
-        }
-
-        .scrollable-categories .list-group-item:hover {
-            background-color: #f0f0f0;
-        }
-
-        .sticker-section {
-            width: calc(100% - 280px);
-            /* Subtract the width of the category section plus margin */
-            margin-right: 20px;
-            /* Add margin on the right side to create space */
-        }
-
-        .sticker_image {
+        .product_image {
             padding: 10px;
             width: 100%;
             height: 180px;
@@ -193,14 +165,12 @@ if (empty($stickers)) {
             height: 180px;
         }
 
-        .card-body {
-            width: 200px;
-        }
-
         .card {
-            width: 200px;
+            width: 250px;
             background-color: #333;
             border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .card-title,
@@ -208,39 +178,63 @@ if (empty($stickers)) {
             color: white;
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+        .card-body {
+            text-align: center;
         }
 
-        h5 {
-            text-align: center;
-            color: white;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            font-size: 30px;
+        .btn-primary {
+
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .sticky-category {
+            position: sticky;
+            top: 0;
+        }
+
+        .scrollable-categories {
+            max-height: calc(100vh - 50px);
+            overflow-y: auto;
+        }
+
+        .scrollable-categories::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollable-categories::-webkit-scrollbar-thumb {
+            background-color: gray;
+            border-radius: 4px;
         }
     </style>
+
 </head>
 
 <body>
     <div class="container">
-        <div class="sticker-section">
+        <div class="product-section">
             <h1><?php echo $heading_text; ?></h1>
             <div class="row row-cols-1 row-cols-md-4 g-4">
-                <?php foreach ($stickers as $sticker) { ?>
+                <?php foreach ($products as $product) { ?>
                     <div class="col">
                         <div class="card h-100">
-                            <div class="sticker_image">
-                                <img src="<?php echo $sticker['image']; ?>" class="card-img-top img-fluid"
-                                    alt="Sticker Image">
+                            <div class="product_image">
+                                <img src="<?php echo $product['image']; ?>" class="card-img-top img-fluid"
+                                    alt="product Image">
                             </div>
                             <div class=" card-body">
-                                <h4 class="card-title"><?php echo $sticker['name']; ?></h4>
-                                <h6 class="card-title"><?php echo "Rs." . $sticker['price'] . " per sticker"; ?></h6>
-                                <h6 class="card-title"><?php echo "Stock " . $sticker['stock']; ?></h6>
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="<?php echo 'add_to_cart.php?sticker_id=' . $sticker['id']; ?>"
+                                <h4 class="card-title"><?php echo $product['name']; ?></h4>
+                                <h6 class="card-title"><?php echo "Rs." . $product['price'] . " per product"; ?></h6>
+                                <h6 class="card-title"><?php echo "Stock " . $product['stock']; ?></h6>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                    <a href="<?php echo 'add_to_cart.php?product_id=' . $product['id']; ?>"
                                         class="btn btn-primary">Add to cart</a>
                                 </div>
                             </div>

@@ -5,7 +5,7 @@ include "header.php";
 
 
 $id = $_GET['id'];
-$cart_item = mysqli_fetch_assoc(mysqli_query($connection, "SELECT *, cart_item.quantity FROM cart_item JOIN sticker ON sticker.id = cart_item.sticker_id WHERE cart_item.id = $id"));
+$cart_item = mysqli_fetch_assoc(mysqli_query($connection, "SELECT *, cart_item.quantity FROM cart_item JOIN product ON product.id = cart_item.product_id WHERE cart_item.id = $id"));
 $stock = $cart_item['stock']; // Fetch stock value
 
 if (isset($_POST['update'])) {
